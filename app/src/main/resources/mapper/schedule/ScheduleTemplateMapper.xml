@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.schedule.mapper.ScheduleTemplateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.schedule.model.ScheduleTemplate">
+    <result column="id" property="id" />
+    <result column="record_version" property="recordVersion" />
+    <result column="x" property="x" />
+    <result column="create_time" property="createTime" />
+        <result column="product_id" property="productId" />
+        <result column="task_name" property="taskName" />
+        <result column="task_description" property="taskDescription" />
+        <result column="trigger_cron_expression" property="triggerCronExpression" />
+        <result column="schedule_data" property="scheduleData" />
+        <result column="updated_time" property="updatedTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        record_version,
+        x,
+        create_time,
+        product_id, task_name, task_description, trigger_cron_expression, schedule_data, updated_time
+    </sql>
+
+</mapper>

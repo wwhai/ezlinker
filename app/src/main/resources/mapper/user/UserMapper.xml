@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.user.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.user.model.User">
+        <result column="id" property="id"/>
+        <result column="x" property="x"/>
+        <result column="record_version" property="recordVersion"/>
+        <result column="create_time" property="createTime"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="avatar" property="avatar"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="real_name" property="realName"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="user_type" property="userType"/>
+        <result column="status" property="status"/>
+        <result column="user_profile_id" property="userProfileId"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <result column="last_login_ip" property="lastLoginIp"/>
+    </resultMap>
+
+
+    <select id="getAllRoles" resultType="com.ezlinker.app.modules.role.model.Role">
+            SELECT
+                A.user_id,
+                A.role_id,
+                B.*
+            FROM
+                ez_relation_user_role A
+                LEFT JOIN ez_role B ON ( A.role_id = B.id )
+            WHERE
+                A.user_id =  #{userId}
+    </select>
+
+
+    <select id="getPermissions" resultType="com.ezlinker.app.modules.permission.model.Permission">
+            SELECT
+                *
+            FROM
+                (
+            SELECT
+                A.role_id,
+                B.permission_id,
+                B.permission_value
+            FROM
+                ez_relation_user_role A
+                INNER JOIN ez_relation_role_permission B ON ( A.role_id = B.role_id )
+            WHERE
+                A.user_id = #{userId}
+                ) C
+            LEFT JOIN ez_permission D ON ( C.permission_id = D.id );
+    </select>
+
+
+    <select id="getUserInfo" resultType="com.ezlinker.app.modules.user.model.UserInfo">
+    SELECT DISTINCT
+	`a`.`id` AS `id`,
+	`a`.`username` AS `username`,
+	`a`.`password` AS `password`,
+	`a`.`avatar` AS `avatar`,
+	`a`.`phone` AS `phone`,
+	`a`.`email` AS `email`,
+	`a`.`real_name` AS `real_name`,
+	`a`.`nick_name` AS `nick_name`,
+	`a`.`user_type` AS `user_type`,
+	`a`.`status` AS `status`,
+	`a`.`user_profile_id` AS `user_profile_id`,
+	`a`.`last_login_time` AS `last_login_time`,
+	`a`.`last_login_ip` AS `last_login_ip`,
+	`b`.`region` AS `region`,
+	`b`.`province` AS `province`,
+	`b`.`area` AS `area`,
+	`b`.`city` AS `city`,
+	`b`.`address` AS `address`,
+	`b`.`domain` AS `domain`,
+	`b`.`certification` AS `certification`,
+	`b`.`personal_remark` AS `personal_remark`,
+	`b`.`qq` AS `qq`,
+	`b`.`wechat` AS `wechat`,
+	`a`.`x` AS `x`,
+	`a`.`record_version` AS `record_version`,
+	`a`.`create_time` AS `create_time`
+    FROM
+        ( `ez_user` `a` LEFT JOIN `ez_user_profile` `b` ON ( ( `a`.`user_profile_id` = `b`.`id` ) ) )
+          where `a`.`id`  = #{userId}
+    </select>
+
+
+</mapper>

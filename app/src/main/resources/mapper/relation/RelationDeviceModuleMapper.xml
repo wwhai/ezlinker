@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.relation.mapper.RelationDeviceModuleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.relation.model.RelationDeviceModule">
+    <result column="id" property="id" />
+        <result column="device_id" property="deviceId" />
+        <result column="module_id" property="moduleId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        device_id, module_id
+    </sql>
+
+</mapper>

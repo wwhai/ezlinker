@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.feature.mapper.FeatureMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.feature.model.Feature">
+        <result column="id" property="id"/>
+        <result column="record_version" property="recordVersion"/>
+        <result column="x" property="x"/>
+        <result column="create_time" property="createTime"/>
+        <result column="label" property="label"/>
+        <result column="product_id" property="productId"/>
+        <result column="type" property="type"/>
+        <result column="cmd_key" property="cmdKey"/>
+        <result column="cmd_values" property="cmdValues"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        record_version,
+        x,
+        product_id,
+        create_time,
+        label, `type`, cmd_key, cmd_values
+    </sql>
+
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.project.mapper.ProjectMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.project.model.Project">
+        <result column="id" property="id"/>
+        <result column="record_version" property="recordVersion"/>
+        <result column="x" property="x"/>
+        <result column="create_time" property="createTime"/>
+        <result column="name" property="name"/>
+        <result column="logo" property="logo"/>
+        <result column="type" property="type"/>
+        <result column="state" property="state"/>
+        <result column="description" property="description"/>
+        <result column="location" property="location"/>
+    </resultMap>
+
+
+    <select id="listAllAuthorizeProjectByUserId" resultType="com.ezlinker.app.modules.project.model.Project">
+            SELECT
+            A.*,
+            B.user_id,
+            B.project_id
+            FROM
+            ez_project AS A
+            LEFT JOIN ez_relation_user_project AS B ON ( A.id = B.project_id )
+            WHERE
+            B.user_id = #{userId};
+    </select>
+
+</mapper>

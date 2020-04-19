@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>app</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script></head>
+<body>
+
+<button id="sendBtn" onclick="send()">发送</button>
+<button id="testBtn" onclick="test()">测试</button>
+
+<div id="content-wrap"></div>
+</body>
+<script>
+    // const socket = io('http://39.108.214.107:12001?token=32dassw4fd3r&deviceId=1');
+     const socket = io('http://localhost:2501?token=32dassw4fd3r&deviceId=2');
+
+    function send() {
+        socket.emit('s2c', "helloworld")
+        console.log("发送数据:")
+
+    }
+
+    function test() {
+        socket.emit('test', "HelloWorld")
+    }
+
+    /**
+     * 来自客户端的消息
+     */
+    socket.on('c2s', data => {
+        window.console.log("来自客户端的的回应:", data);
+
+    })
+
+    /**
+     * 服务端回复的消息
+     */
+    socket.on('echo', data => {
+        window.console.log("来自服务器的回应:", data);
+    });
+
+    socket.on('echoEvent', data => {
+        window.console.log("来自服务器的回应:", data);
+    });
+
+</script>
+
+</html>

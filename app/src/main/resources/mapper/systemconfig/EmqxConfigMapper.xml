@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.systemconfig.mapper.EmqxConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.systemconfig.model.EmqxConfig">
+        <result column="id" property="id"/>
+        <result column="record_version" property="recordVersion"/>
+        <result column="x" property="x"/>
+        <result column="create_time" property="createTime"/>
+        <result column="ip" property="ip"/>
+        <result column="app_id" property="appId"/>
+        <result column="secret" property="secret"/>
+        <result column="node_name" property="nodeName"/>
+        <result column="port" property="port"/>
+        <result column="description" property="description"/>
+    </resultMap>
+
+</mapper>

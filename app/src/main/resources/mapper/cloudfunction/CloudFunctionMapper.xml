@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.cloudfunction.mapper.CloudFunctionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.cloudfunction.model.CloudFunction">
+        <result column="id" property="id"/>
+        <result column="record_version" property="recordVersion"/>
+        <result column="x" property="x"/>
+        <result column="create_time" property="createTime"/>
+        <result column="user_id" property="userId"/>
+        <result column="cloud_app_id" property="cloudAppId"/>
+        <result column="label" property="label"/>
+        <result column="enable" property="enable"/>
+        <result column="description" property="description"/>
+        <result column="script" property="script"/>
+
+    </resultMap>
+
+</mapper>

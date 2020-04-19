@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.authorize.mapper.ResourceAuthorizeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.authorize.model.ResourceAuthorize">
+        <result column="id" property="id"/>
+        <result column="x" property="x"/>
+        <result column="record_version" property="recordVersion"/>
+        <result column="create_time" property="createTime"/>
+        <result column="master_id" property="masterId"/>
+        <result column="master_table" property="masterTable"/>
+        <result column="slaver_id" property="slaverId"/>
+        <result column="salver_table" property="slaverTable"/>
+        <result column="authorize_value" property="authorizeValue"/>
+    </resultMap>
+
+
+</mapper>

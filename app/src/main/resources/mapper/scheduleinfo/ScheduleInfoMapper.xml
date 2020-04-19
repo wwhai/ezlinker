@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.schedule.mapper.ScheduleInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.schedule.model.ScheduleInfo">
+        <result column="id" property="id"/>
+        <result column="link_id" property="linkId"/>
+        <result column="task_description" property="taskDescription"/>
+        <result column="task_name" property="taskName"/>
+        <result column="task_group" property="taskGroup"/>
+        <result column="trigger_name" property="triggerName"/>
+        <result column="trigger_group" property="triggerGroup"/>
+        <result column="trigger_cron_expression" property="triggerCronExpression"/>
+        <result column="execute_class_name" property="executeClassName"/>
+        <result column="execute_method_name" property="executeMethodName"/>
+        <result column="target_table" property="targetTable"/>
+        <result column="is_start" property="isStart"/>
+        <result column="status" property="status"/>
+        <result column="schedule_data" property="scheduleData"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="updated_id" property="updatedId"/>
+        <result column="updated_time" property="updatedTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,link_id,
+        task_description, task_name, task_group, trigger_name, trigger_group, trigger_cron_expression, execute_class_name, execute_method_name, schedule_data,target_table, is_start, status, updated_id, updated_time
+    </sql>
+
+</mapper>

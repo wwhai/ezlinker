@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.device.mapper.DeviceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.device.model.Device">
+    <result column="id" property="id" />
+    <result column="record_version" property="recordVersion" />
+    <result column="x" property="x" />
+    <result column="create_time" property="createTime" />
+        <result column="project_id" property="projectId" />
+        <result column="product_id" property="productId" />
+        <result column="name" property="name" />
+        <result column="logo" property="logo" />
+        <result column="location" property="location" />
+        <result column="model" property="model" />
+        <result column="industry" property="industry" />
+        <result column="sn" property="sn" />
+        <result column="type" property="type" />
+        <result column="last_active" property="lastActive" />
+        <result column="state" property="state" />
+        <result column="statuses" property="statuses" />
+        <result column="username" property="username" />
+        <result column="client_id" property="clientId"/>
+        <result column="password" property="password" />
+        <result column="is_superuser" property="isSuperuser" />
+        <result column="token" property="token" />
+        <result column="protocol" property="protocol"/>
+        <result column="parameters" property="parameters" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler" />
+        <result column="description" property="description" />
+    </resultMap>
+
+</mapper>

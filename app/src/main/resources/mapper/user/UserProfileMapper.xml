@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.user.mapper.UserProfileMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.user.model.UserProfile">
+    <result column="id" property="id" />
+    <result column="x" property="x" />
+    <result column="record_version" property="recordVersion" />
+    <result column="create_time" property="createTime" />
+        <result column="region" property="region" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="area" property="area" />
+        <result column="address" property="address" />
+        <result column="domain" property="domain" />
+        <result column="personal_remark" property="personalRemark" />
+        <result column="certification" property="certification" />
+        <result column="qq" property="qq" />
+        <result column="wechat" property="wechat" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        x,
+        record_version,
+        create_time,
+        region, province, city, area, address, domain, personal_remark, certification, qq, wechat
+    </sql>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.userlog.mapper.UserLoginLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.userlog.model.UserLoginLog">
+    <result column="id" property="id" />
+    <result column="record_version" property="recordVersion" />
+    <result column="x" property="x" />
+    <result column="create_time" property="createTime" />
+        <result column="user_id" property="userId" />
+        <result column="status" property="status" />
+        <result column="ip" property="ip" />
+        <result column="remark" property="remark" />
+        <result column="location" property="location" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        record_version,
+        x,
+        create_time,
+        user_id, status, ip, remark, location
+    </sql>
+
+</mapper>

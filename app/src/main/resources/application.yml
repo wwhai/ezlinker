@@ -1,0 +1,122 @@
+# Server info
+server:
+  servlet:
+    context-path: /ezlinker
+  port: 2500
+# Spring config
+spring:
+  devtools:
+    add-properties: false
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3308/ezlinker?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8&tinyInt1isBit=NO
+      username: root
+      password: root
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: password
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+
+
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    timeout: 300
+    # password: redis
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      #      password: 123456
+      #      username: admin
+      port: 27017
+      database: ezlinker
+      authentication-database: admin
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+  resources:
+    add-mappings: false
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  # Quartz
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceId: AUTO
+            instanceName: clusteredScheduler
+            jobStore:
+              acquireTriggersWithinLock: true
+              class: org.quartz.impl.jdbcjobstore.JobStoreTX
+              driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+              useProperties: true
+              tablePrefix: qrtz_
+              misfireThreshold: 60000
+              clusterCheckinInterval: 5000
+              isClustered: false
+            threadPool:
+              class: org.quartz.simpl.SimpleThreadPool
+              threadCount: 10
+              threadPriority: 5
+              threadsInheritContextClassLoaderOfInitializingThread: true
+    startup-delay: 30
+    overwrite-existing-jobs: true
+
+
+
+logging:
+  level:
+    root: info
+    org.springframework.data.mongodb.core: DEBUG
+    com.baomidou.mybatisplus.core.mapper: DEBUG
+    web: debug
+
+#mybatis-plus:
+#  global-config:
+#    db-config:
+#      id-type: auto
+#  mapper-locations: classpath*:/mapper/**/*.xml
+
+# Aliyun Mail push
+# "cn-hangzhou", "ULw8nLnKBktSbOhI", "hgAj2F2KtaMvLuXZzpVyVWZ0rl4SXR"
+aliyun:
+  mail:
+    access-key: ULw8nLnKBktSbOhI
+    secret: hgAj2F2KtaMvLuXZzpVyVWZ0rl4SXR
+    region-id: cn-hangzhou
+    account-name: ezlinker@ezlinker.cn
+    from-alias: EZLinker
+    address-type: 1
+    tag-name: EZLinker

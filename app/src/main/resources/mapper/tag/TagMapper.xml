@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezlinker.app.modules.tag.mapper.TagMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.tag.model.Tag">
+    <result column="id" property="id" />
+    <result column="x" property="x" />
+    <result column="record_version" property="recordVersion" />
+    <result column="create_time" property="createTime" />
+        <result column="name" property="name" />
+        <result column="device_id" property="deviceId" />
+        <result column="type" property="type" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        x,
+        record_version,
+        create_time,
+        `name`, device_id, `type`
+    </sql>
+
+</mapper>
