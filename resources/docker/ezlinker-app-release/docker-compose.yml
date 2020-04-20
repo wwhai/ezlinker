@@ -82,27 +82,27 @@ services:
     networks:
       ezlinker_net:
         ipv4_address: 192.168.1.102
-  # EMQX
-  ezlinker-emqx:
-    image: ezlinker/emqx
-    container_name: ezlinker_emqx
-    command: /EZLINKER/emqx-4.0-alpine/emqx/bin/emqx start
-    ports:
-      - "51803:18083"
-      - "51883:1883"
-    restart: always
-    networks:
-      ezlinker_net:
-        ipv4_address: 192.168.1.103
-
-  # Nginx
-  ezlinker-nginx:
-    image: ezlinker/nginx
-    container_name: ezlinker_nginx
-    ports:
-      - "52580:80"
-      - "52443:443"
-    restart: always
-    networks:
-      ezlinker_net:
-        ipv4_address: 192.168.1.104
+#  # EMQX
+#  ezlinker-emqx:
+#    image: ezlinker/emqx
+#    container_name: ezlinker_emqx
+#    command: /EZLINKER/emqx-4.0-alpine/emqx/bin/emqx start
+#    ports:
+#      - "51803:18083"
+#      - "51883:1883"
+#    restart: always
+#    networks:
+#      ezlinker_net:
+#        ipv4_address: 192.168.1.103
+#
+#  # Nginx
+#  ezlinker-nginx:
+#    image: ezlinker/nginx
+#    container_name: ezlinker_nginx
+#    ports:
+#      - "52580:80"
+#      - "52443:443"
+#    restart: always
+#    networks:
+#      ezlinker_net:
+#        ipv4_address: 192.168.1.104
