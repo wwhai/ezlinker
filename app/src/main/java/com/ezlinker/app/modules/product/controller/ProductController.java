@@ -70,10 +70,6 @@ public class ProductController extends XController {
 
     @PostMapping
     protected R add(@RequestBody @Valid Product product) throws BadRequestException {
-        if (product.getParameters() == null) {
-            throw new BadRequestException("Parameters can't null!", "Parameters参数不可空");
-
-        }
 
         boolean ok = iProductService.save(product);
         if (ok) {

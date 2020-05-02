@@ -51,7 +51,6 @@ public class Product extends XEntity {
     /**
      * 产品logo
      */
-    @NotEmpty(message = "Logo不能为空")
 
     private String logo;
 
