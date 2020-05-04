@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
- * 云APP
+ * 这个指的是开放API
  * </p>
  *
  * @author wangwenhai
