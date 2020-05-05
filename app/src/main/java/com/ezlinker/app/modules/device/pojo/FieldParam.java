@@ -19,6 +19,18 @@ public class FieldParam   {
     @NotEmpty(message = "字段名不可为空值")
     private String field;
     /**
+     * 计量单位，比如Kg M N等等
+     * 前端通过下拉列表来选择
+     * 【计量单位】
+     *  ----千克
+     *  ----米
+     *  ----千瓦
+     *  ----牛顿
+     *
+     * 默认为空，前端显示为Value
+     */
+    private String unit;
+    /**
      * 类型:
      * 1: Number
      * 2: String

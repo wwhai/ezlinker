@@ -4,12 +4,13 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.systemconfig.model.DeviceRomSupportConfig">
-    <result column="id" property="id" />
-    <result column="record_version" property="recordVersion" />
-    <result column="x" property="x" />
-    <result column="create_time" property="createTime" />
-        <result column="value" property="value" />
-        <result column="description" property="description" />
+        <result column="id" property="id"/>
+        <result column="record_version" property="recordVersion"/>
+        <result column="x" property="x"/>
+        <result column="create_time" property="createTime"/>
+        <result column="value" property="value"/>
+        <result column="program_location" property="programLocation"/>
+        <result column="description" property="description"/>
     </resultMap>
 
 </mapper>

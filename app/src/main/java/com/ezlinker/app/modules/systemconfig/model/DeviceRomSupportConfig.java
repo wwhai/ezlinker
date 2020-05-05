@@ -33,5 +33,8 @@ public class DeviceRomSupportConfig extends XEntity {
      */
     private String description;
 
-
+    /**
+     *  代码位置
+     */
+    private String programLocation;
 }
