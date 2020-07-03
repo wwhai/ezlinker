@@ -45,7 +45,7 @@ spring:
     host: localhost
     port: 56379
     timeout: 300
-    password: ezlinker_redis
+    password: root
 
   # MongoDB
   data:
