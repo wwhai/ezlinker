@@ -39,6 +39,7 @@ spring:
           config:
             multi-statement-allow: true
 
+
   # Redis
   redis:
     database: 0
