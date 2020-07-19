@@ -23,7 +23,6 @@
     </properties>
     <modules>
         <module>app</module>
-        <module>otpsupport</module>
     </modules>
 
 
