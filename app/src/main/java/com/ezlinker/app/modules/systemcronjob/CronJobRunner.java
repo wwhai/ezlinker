@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * 系统的定时任务策略
  */
-@Component
+//@Component
 public class CronJobRunner {
     private static Logger logger = LoggerFactory.getLogger(CronJobRunner.class);
     @Resource
