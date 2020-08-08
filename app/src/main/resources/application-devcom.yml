@@ -51,7 +51,7 @@ spring:
   # MongoDB
   data:
     mongodb:
-      uri: mongodb://root:ezlinker_mongo@localhost:57017/?authSource=admin
+      uri: mongodb://root:root@localhost:57017/?authSource=admin
       database: ezlinker
   mvc:
     throw-exception-if-no-handler-found: true
