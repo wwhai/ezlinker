@@ -76,3 +76,49 @@ services:
     networks:
       ezlinker_net:
         ipv4_address: 192.168.1.102
+
+emqx1:
+  container_name: ezlinker_emqx1
+  image: emqx/emqx:v4.0.0
+  ports:
+    - 1801:1883
+    - 18001:18083
+    - 18081:8080
+  environment:
+    - "EMQX_NAME=emqx1"
+    - "EMQX_HOST=node1.emqx.io"
+    - "EMQX_CLUSTER__DISCOVERY=static"
+    - "EMQX_CLUSTER__STATIC__SEEDS=emqx@node1.emqx.io, emqx@node2.emqx.io"
+  healthcheck:
+    test: ["CMD", "/opt/emqx/bin/emqx_ctl", "status"]
+    interval: 5s
+    timeout: 25s
+    retries: 5
+  networks:
+    ezlinker_net:
+      ipv4_address: 192.168.1.110
+      aliases:
+        - node1.emqx.io
+
+  emqx2:
+    container_name: ezlinker_emqx2
+    image: emqx/emqx:v4.0.0
+    ports:
+      - 1802:1883
+      - 18002:18083
+      - 18082:8080
+    environment:
+      - "EMQX_NAME=emqx2"
+      - "EMQX_HOST=node2.emqx.io"
+      - "EMQX_CLUSTER__DISCOVERY=static"
+      - "EMQX_CLUSTER__STATIC__SEEDS=emqx@node1.emqx.io, emqx@node2.emqx.io"
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx_ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    networks:
+      ezlinker_net:
+        ipv4_address: 192.168.1.111
+        aliases:
+          - node2.emqx.io
