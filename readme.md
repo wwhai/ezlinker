@@ -1,23 +1,17 @@
-# EZLinker:轻量级物联网应用
+# EZLinker:一个简单易用的物联网设备管理系统
 ---
 [![Banner](resources/static/banner.gif)](resources/static/banner.gif)
 ## 当前进度
-0I===========================60%=============I100
-> 目前还在填坑,问题很大.不建议尝试.
+- 0I===========================60%=============I100
+> 今天是2020年8月16日，本项目还在龟速前进。
+> 目前还在填坑,问题很大.不建议尝试.学习可以。
 > 如果有能力开发，可联系QQ：751957846;或者QQ群:475512169.
 
 ## 技术栈
-1. 主业务系统:Springboot+Mybatisplus+Mongodb+redis
-2. MQTT节点:EMQX(4.X+)
-3. HTTP节点:Golang
-4. COAP节点:Erlang-COAP
-5. 前端:AntDesign
-6. 微信小程序相关技术
-7. 流媒体服务:EasyDarWin流媒体服务器(Golang实现)
-8. 云函数:Node.js
+主业务系统:Springboot+MyBatisPlus+Mongodb+redis
 > 本项目涉及到的技术点比较多,可以插件化灵活配置.虽然比较复杂,但是后期会出详细文档和视频讲解.
 ## 前端地址
-https://github.com/ssloth/ezlinker-frontend.git
+https://github.com/wwhai/ezlinker-frontpage
 > 前端项目基于Ant Design.
 
 ## 项目文档
@@ -29,15 +23,10 @@ EZLinker的核心业务:MQTT服务,是基于EMQX构建.为了适应自己的业�
 2. EZLinker的EMQX发行版地址:https://gitee.com/wwhai/emqx-rel
 3. EZLinker核心插件:https://gitee.com/wwhai/ezlinker_core_plugin
 4. EZLinker客户上下线插件:https://gitee.com/wwhai/ezlinker_advisory_plugin.git
-## Docker
-```shell script
-ezlinker-emqx:docker pull 18059150204/emqx
-ezlinker:docker pull 18059150204/ezlinker
-```
+
 
 ## 其他
 下面是一些辅助性的工具,还有EZLinker团队提供的常见的平台的SDK.
-- COAP协议测试工具:https://github.com/wwhai/EZCoapTester.git
 - Arduino SDK :https://github.com/wwhai/ezlinker_arduino_sdk.git
 - ESP8266简单Demo:https://github.com/wwhai/ESP8266_Simple_cli.git
 
@@ -50,7 +39,7 @@ ezlinker:docker pull 18059150204/ezlinker
 ## QQ群\WeChat
 [![QQ](resources/static/contract.png)](resources/static/contract.gif)
 > 加微信请注明来自github
->
+
 ## 协议
 本项目采取Apache2开源协议.
 ```text

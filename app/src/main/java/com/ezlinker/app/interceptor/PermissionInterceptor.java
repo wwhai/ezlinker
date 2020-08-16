@@ -1,6 +1,7 @@
 package com.ezlinker.app.interceptor;
 
 import com.ezlinker.app.common.exception.XException;
+import com.ezlinker.app.utils.HelpfulUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,37 +20,13 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        logger.info(request.getServletPath() + " Method:" + request.getMethod() + " ->:" + getIpAddress(request));
+        logger.info(request.getServletPath() + " Method:" + request.getMethod() + " ->:" + HelpfulUtil.getIpAddress(request));
 
         if (!hasToken(request)) {
             throw new XException(401, "Require token", "Token缺失");
         }
         return true;
 
-    }
-
-    private String getIpAddress(HttpServletRequest request) {
-        String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        if (ip != null && ip.contains(",")) {
-            ip = ip.substring(0, ip.indexOf(",")).trim();
-        }
-
-        return ip;
     }
 
     /**
