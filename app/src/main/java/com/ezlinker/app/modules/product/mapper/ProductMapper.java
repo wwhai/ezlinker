@@ -1,7 +1,7 @@
 package com.ezlinker.app.modules.product.mapper;
 
-import com.ezlinker.app.modules.product.model.Product;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ezlinker.app.modules.product.model.Product;
 
 /**
  * <p>
@@ -12,5 +12,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2019-11-13
  */
 public interface ProductMapper extends BaseMapper<Product> {
+    Product getDetail(long id);
 
 }

@@ -1,7 +1,7 @@
 package com.ezlinker.app.modules.product.service;
 
-import com.ezlinker.app.modules.product.model.Product;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ezlinker.app.modules.product.model.Product;
 
 /**
  * <p>
@@ -12,5 +12,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2019-11-13
  */
 public interface IProductService extends IService<Product> {
+    Product getDetail(long id);
 
 }

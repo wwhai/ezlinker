@@ -20,5 +20,22 @@
         <result column="protocol" property="protocol"/>
 
     </resultMap>
+    <select id="getDetail" resultType="com.ezlinker.app.modules.product.model.Product">
+             SELECT
+             	PRODUCT_DATA.*,
+             	COUNTINFO.deviceCount
+             FROM
+             	ez_product PRODUCT_DATA
+             	RIGHT JOIN (
+             	SELECT
+             		PRODUCT.id,
+             		COUNT( 1 ) deviceCount
+             	FROM
+             		ez_product PRODUCT
+             		RIGHT JOIN ez_device DEVICE ON ( PRODUCT.id = DEVICE.product_id )
+             	WHERE
+             	PRODUCT.id = #{id}
+             	) COUNTINFO ON ( PRODUCT_DATA.id = COUNTINFO.id );
+    </select>
 
 </mapper>

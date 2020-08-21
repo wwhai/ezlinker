@@ -1,10 +1,12 @@
 package com.ezlinker.app.modules.product.service.impl;
 
-import com.ezlinker.app.modules.product.model.Product;
-import com.ezlinker.app.modules.product.mapper.ProductMapper;
-import com.ezlinker.app.modules.product.service.IProductService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ezlinker.app.modules.product.mapper.ProductMapper;
+import com.ezlinker.app.modules.product.model.Product;
+import com.ezlinker.app.modules.product.service.IProductService;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -17,4 +19,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements IProductService {
 
+    @Resource
+    ProductMapper productMapper;
+
+    @Override
+    public Product getDetail(long id) {
+        return productMapper.getDetail(id);
+    }
 }

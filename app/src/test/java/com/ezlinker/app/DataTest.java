@@ -2,6 +2,7 @@ package com.ezlinker.app;
 
 import com.ezlinker.app.modules.dataentry.model.DeviceData;
 import com.ezlinker.app.modules.dataentry.service.DeviceDataService;
+import com.ezlinker.app.modules.product.service.IProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -37,6 +38,9 @@ public class DataTest {
         System.out.println(query.toString());
     }
 
+    @Resource
+    IProductService productService;
+
     @Test
     public void addData() {
 
@@ -51,7 +55,12 @@ public class DataTest {
             deviceDataService.save(1L, 3L, deviceData);
 
         }
+    }
 
-
+    @Test
+    void testProductDetails() {
+        long deviceCount = productService.getDetail(1).getDeviceCount();
+        System.out.println("device count is " + deviceCount);
+        assert deviceCount == 3;
     }
 }

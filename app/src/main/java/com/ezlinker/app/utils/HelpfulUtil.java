@@ -1,5 +1,8 @@
 package com.ezlinker.app.utils;
 
+import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -9,6 +12,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class HelpfulUtil {
 
+    /**
+     * @param request
+     * @return
+     */
     public static String getIpAddress(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
@@ -32,4 +39,20 @@ public class HelpfulUtil {
 
         return ip;
     }
+
+    /**
+     * @param ip
+     * @return
+     */
+    public static String getLocationWithIp(String ip) {
+        try {
+            String result = HttpUtil.get("http://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip);
+
+            JSONObject data = JSONObject.parseObject(result);
+            return data.getString("pro") + data.getString("city") + data.getString("addr");
+        } catch (Exception e) {
+            return "IP详细信息获取失败";
+        }
+    }
+
 }

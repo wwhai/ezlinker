@@ -90,4 +90,10 @@ public class Product extends XEntity {
     private JSONObject layout;
     @NotNull(message = "协议类型不能为空值")
     private Integer protocol;
+
+    /**
+     * 2020-8-20: 生产的设备数量
+     */
+    @TableField(exist = false)
+    private long deviceCount;
 }

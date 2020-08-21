@@ -11,9 +11,13 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3308/ezlinker?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8&tinyInt1isBit=NO
-      username: root
-      password: root
+      #      url: jdbc:mysql://localhost:3308/ezlinker?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8&tinyInt1isBit=NO
+      #      username: root
+      #      password: root
+      url: jdbc:mysql://112.74.44.130:3306/ezlinker?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8&tinyInt1isBit=NO
+      username: easylinker
+      password: 123456
+
       initial-size: 10
       max-active: 100
       min-idle: 10
@@ -26,11 +30,6 @@ spring:
       test-while-idle: true
       test-on-borrow: false
       test-on-return: false
-      stat-view-servlet:
-        enabled: true
-        url-pattern: /druid/*
-        login-username: admin
-        login-password: password
       filter:
         stat:
           log-slow-sql: true
@@ -41,27 +40,24 @@ spring:
             multi-statement-allow: true
 
 
+  # Redis
   redis:
     database: 0
     host: localhost
-    port: 6379
+    port: 56379
     timeout: 300
-    # password: redis
+    password: root
 
+  # MongoDB
   data:
     mongodb:
-      uri: mongodb://localhost:27017
-      #      password: 123456
-      #      username: admin
-      port: 27017
+      uri: mongodb://root:root@localhost:57017/?authSource=admin
       database: ezlinker
-      authentication-database: admin
   mvc:
     throw-exception-if-no-handler-found: true
-
   resources:
     add-mappings: false
-
+  # JSON
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -95,7 +91,7 @@ spring:
     overwrite-existing-jobs: true
 
 
-
+#  debug log
 logging:
   level:
     root: info
@@ -103,20 +99,16 @@ logging:
     com.baomidou.mybatisplus.core.mapper: DEBUG
     web: debug
 
-#mybatis-plus:
-#  global-config:
-#    db-config:
-#      id-type: auto
-#  mapper-locations: classpath*:/mapper/**/*.xml
 
-# Aliyun Mail push
-# "cn-hangzhou", "ULw8nLnKBktSbOhI", "hgAj2F2KtaMvLuXZzpVyVWZ0rl4SXR"
-aliyun:
-  mail:
-    access-key: ULw8nLnKBktSbOhI
-    secret: hgAj2F2KtaMvLuXZzpVyVWZ0rl4SXR
-    region-id: cn-hangzhou
-    account-name: ezlinker@ezlinker.cn
-    from-alias: EZLinker
-    address-type: 1
-    tag-name: EZLinker
+# netty-socketio
+socketio:
+  host: 127.0.0.1
+  port: 2501
+  maxFramePayloadLength: 1048576
+  maxHttpContentLength: 1048576
+  bossCount: 1
+  workCount: 100
+  allowCustomRequests: true
+  upgradeTimeout: 1000000
+  pingTimeout: 6000000
+  pingInterval: 25000
