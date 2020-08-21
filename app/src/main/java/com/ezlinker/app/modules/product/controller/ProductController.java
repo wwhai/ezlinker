@@ -16,17 +16,15 @@ import com.ezlinker.app.modules.module.service.IModuleService;
 import com.ezlinker.app.modules.product.model.Product;
 import com.ezlinker.app.modules.product.service.IProductService;
 import com.ezlinker.app.modules.relation.model.RelationProductModule;
-import com.ezlinker.app.modules.relation.model.RelationProductTag;
 import com.ezlinker.app.modules.relation.service.IRelationProductModuleService;
-import com.ezlinker.app.modules.relation.service.IRelationProductTagService;
-import com.ezlinker.app.modules.tag.model.Tag;
-import com.ezlinker.app.modules.tag.service.ITagService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -56,10 +54,6 @@ public class ProductController extends XController {
         super(httpServletRequest);
     }
 
-    @Resource
-    ITagService iTagService;
-    @Resource
-    IRelationProductTagService iRelationProductTagService;
 
     /**
      * 创建产品
@@ -72,19 +66,6 @@ public class ProductController extends XController {
     protected R add(@RequestBody @Valid Product product) throws BadRequestException {
 
         boolean ok = iProductService.save(product);
-        if (ok) {
-            if (product.getTags() != null) {
-                for (String tag : product.getTags()) {
-                    Tag t = new Tag();
-                    t.setName(tag).setLinkId(product.getId());
-                    iTagService.save(t);
-                    RelationProductTag productTag = new RelationProductTag();
-                    productTag.setProductId(product.getId()).setTagId(t.getId());
-                    iRelationProductTagService.save(productTag);
-                }
-            }
-
-        }
         return ok ? data(product) : fail();
 
     }
@@ -146,13 +127,7 @@ public class ProductController extends XController {
         if (product == null) {
             throw new BizException("Product not exists!", "产品不存在");
         }
-        List<Tag> tagList = iTagService.list(new QueryWrapper<Tag>().eq("link_id", id));
-        Set<String> tags = new HashSet<>();
 
-        for (Tag tag : tagList) {
-            tags.add(tag.getName());
-        }
-        product.setTags(tags);
         return data(product);
     }
 
@@ -174,31 +149,15 @@ public class ProductController extends XController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Integer type) {
         QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
-
         queryWrapper.eq("project_id", projectId);
         queryWrapper.eq(type != null, "type", type);
         queryWrapper.like(name != null, "name", name);
-
         queryWrapper.orderByDesc("create_time");
         IPage<Product> projectPage = iProductService.page(new Page<>(current, size), queryWrapper);
-
-        for (Product product : projectPage.getRecords()) {
-            addTags(product);
-
-        }
-
         return data(projectPage);
     }
 
 
-    private void addTags(Product product) {
-        List<Tag> tagList = iTagService.list(new QueryWrapper<Tag>().eq("link_id", product.getId()));
-        Set<String> tags = new HashSet<>();
-        for (Tag tag : tagList) {
-            tags.add(tag.getName());
-        }
-        product.setTags(tags);
-    }
 
     /**
      * 获取模块信息

@@ -99,16 +99,12 @@ logging:
     com.baomidou.mybatisplus.core.mapper: DEBUG
     web: debug
 
-
-# netty-socketio
-socketio:
-  host: 127.0.0.1
-  port: 2501
-  maxFramePayloadLength: 1048576
-  maxHttpContentLength: 1048576
-  bossCount: 1
-  workCount: 100
-  allowCustomRequests: true
-  upgradeTimeout: 1000000
-  pingTimeout: 6000000
-  pingInterval: 25000
+aliyun:
+  mail:
+    access-key: ULw8nLnKBktSbOhI
+    secret: hgAj2F2KtaMvLuXZzpVyVWZ0rl4SXR
+    region-id: cn-hangzhou
+    account-name: ezlinker@ezlinker.cn
+    from-alias: EZLinker
+    address-type: 1
+    tag-name: EZLinker

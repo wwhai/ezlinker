@@ -25,8 +25,6 @@ import com.ezlinker.app.modules.mqtttopic.service.IMqttTopicService;
 import com.ezlinker.app.modules.product.model.Product;
 import com.ezlinker.app.modules.product.service.IProductService;
 import com.ezlinker.app.modules.systemconfig.service.IDeviceProtocolConfigService;
-import com.ezlinker.app.modules.tag.model.Tag;
-import com.ezlinker.app.modules.tag.service.ITagService;
 import com.ezlinker.app.utils.IDKeyUtil;
 import com.ezlinker.app.utils.ModuleTokenUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -37,7 +35,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -55,8 +56,6 @@ public class DeviceController extends CurdController<Device> {
     // 订阅权限
     private static final int TOPIC_SUB = 2;
 
-    @Resource
-    ITagService iTagService;
     @Resource
     IFeatureService iFeatureService;
     @Resource
@@ -104,7 +103,6 @@ public class DeviceController extends CurdController<Device> {
             throw new BizException("Device not exist", "设备不存在");
         }
 
-        addTags(device);
         addModules(device);
         return data(device);
     }
@@ -142,7 +140,6 @@ public class DeviceController extends CurdController<Device> {
 
         IPage<Device> devicePage = iDeviceService.page(new Page<>(current, size), queryWrapper);
         for (Device device : devicePage.getRecords()) {
-            addTags(device);
             addModules(device);
         }
 
@@ -152,20 +149,6 @@ public class DeviceController extends CurdController<Device> {
     private void addModules(Device device) {
         List<Module> modules = iModuleService.list(new QueryWrapper<Module>().eq("device_id", device.getId()));
         device.setModules(modules);
-    }
-
-    /**
-     * 增加Tag
-     *
-     * @param device
-     */
-    private void addTags(Device device) {
-        List<Tag> tagList = iTagService.list(new QueryWrapper<Tag>().eq("link_id", device.getProductId()));
-        Set<String> tags = new HashSet<>();
-        for (Tag tag : tagList) {
-            tags.add(tag.getName());
-        }
-        device.setTags(tags);
     }
 
     /**

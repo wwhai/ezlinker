@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -54,11 +53,6 @@ public class Product extends XEntity {
 
     private String logo;
 
-    /**
-     * 标签
-     */
-    @TableField(exist = false)
-    private Set<String> tags;
 
     /**
      * 参数

@@ -26,12 +26,13 @@ public class EMQMonitorV4 {
                     return data.getJSONObject("data");
                 }
             }
+            return null;
+
 
         } catch (Exception e) {
             throw new BizException("EMQX节点:" + emqxConfig.getNodeName() + " 连接失败!", "Node:" + emqxConfig.getNodeName() + " connect failure!");
 
         }
-        throw new BizException("EMQX节点:" + emqxConfig.getNodeName() + " 连接失败!", "Node:" + emqxConfig.getNodeName() + " connect failure!");
 
     }
 
@@ -53,12 +54,12 @@ public class EMQMonitorV4 {
                     return data.getJSONObject("data");
                 }
             }
+            return null;
 
         } catch (Exception e) {
             throw new BizException("EMQX节点:" + emqxConfig.getNodeName() + " 连接失败!", "Node:" + emqxConfig.getNodeName() + " connect failure!");
 
         }
-        throw new BizException("EMQX节点:" + emqxConfig.getNodeName() + " 连接失败!", "Node:" + emqxConfig.getNodeName() + " connect failure!");
 
     }
 
