@@ -26,6 +26,11 @@ services:
       - ~/docker/ezlinker/mysql8/log:/var/log/mysql
       - ~/docker/ezlinker/mysql8/mysql-files:/var/lib/mysql-files
     restart: always
+    healthcheck:
+      test: ["CMD", "uname -a"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
     ports:
       - 53306:3306
       - 53060:33060
@@ -47,6 +52,11 @@ services:
     ports:
       - "57017:27017"
     restart: always
+    healthcheck:
+      test: ["CMD", "uname -a"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
     command:
       --bind_ip 0.0.0.0
     environment:
@@ -66,6 +76,11 @@ services:
     volumes:
       - ~/docker/ezlinker/redis/data:/data
     restart: always
+    healthcheck:
+      test: ["CMD", "uname -a"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
     networks:
       ezlinker_net:
         ipv4_address: 192.168.1.102
