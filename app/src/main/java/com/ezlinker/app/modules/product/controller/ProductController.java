@@ -63,7 +63,7 @@ public class ProductController extends XController {
      */
 
     @PostMapping
-    protected R add(@RequestBody @Valid Product product) throws BadRequestException {
+    protected R add(@RequestBody @Valid Product product)   {
 
         boolean ok = iProductService.save(product);
         return ok ? data(product) : fail();
