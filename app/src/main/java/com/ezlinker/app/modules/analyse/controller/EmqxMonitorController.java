@@ -112,6 +112,7 @@ public class EmqxMonitorController extends CurdController<EmqxConfig> {
                 currentNodeInfo = EMQMonitorV4.getNodeInfo(config);
                 // 如果是离线 就更新为在线
                 if (currentNodeInfo != null) {
+                    config.setState(1);
                     currentRunningState.put("node", currentNodeInfo.getString("node"));
                     currentRunningState.put("load1", currentNodeInfo.getFloat("load1"));
                     currentRunningState.put("load5", currentNodeInfo.getFloat("load5"));
@@ -127,7 +128,8 @@ public class EmqxMonitorController extends CurdController<EmqxConfig> {
             } catch (Exception e) {
                 //e.printStackTrace();
                 logger.error(e.getMessage());
-                config.setCurrentRunningState(null);
+                config.setState(0);
+                config.setCurrentRunningState(new HashMap());
 
             }
             //
