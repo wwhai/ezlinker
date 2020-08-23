@@ -26,8 +26,11 @@ public class AppApplication implements CommandLineRunner {
 
 
     @Override
-    public void run(String... args) throws Exception {
-        log.info("<'_'> EZlinker started successfully!");
+    public void run(String... args) {
+        log.info("------------------------------------");
+        log.info("<'_'> EZLINKER started successfully!");
+        log.info("------------------------------------");
+
     }
 
 }
