@@ -14,6 +14,9 @@
         <result column="icon" property="icon"/>
         <result column="data_areas" property="dataAreas"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="action_config" property="actionConfig"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+
         <result column="description" property="description"/>
     </resultMap>
 

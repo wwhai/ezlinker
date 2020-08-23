@@ -44,7 +44,6 @@ public class Product extends XEntity {
     /**
      * 类型
      */
-    @NotEmpty(message = "类型不能为空")
     private String type;
 
     /**

@@ -3,8 +3,8 @@ package com.ezlinker.app.modules.systemconfig.controller;
 
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
-import com.ezlinker.app.modules.systemconfig.model.ModuleTypeConfig;
-import com.ezlinker.app.modules.systemconfig.service.IModuleTypeConfigService;
+import com.ezlinker.app.modules.systemconfig.model.ModuleTemplateConfig;
+import com.ezlinker.app.modules.systemconfig.service.IModuleTemplateConfigService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,15 +22,15 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2020-03-09
  */
 @RestController
-@RequestMapping("/systemConfig/moduleType")
-public class ModuleTypeConfigController extends CurdController<ModuleTypeConfig> {
-
-    public ModuleTypeConfigController(HttpServletRequest httpServletRequest) {
-        super(httpServletRequest);
-    }
+@RequestMapping({"/systemConfig/moduleType", "/systemConfig/moduleTemplate"})
+public class ModuleTemplateConfigController extends CurdController<ModuleTemplateConfig> {
 
     @Resource
-    IModuleTypeConfigService iModuleTypeConfigService;
+    IModuleTemplateConfigService iModuleTemplateConfigService;
+
+    public ModuleTemplateConfigController(HttpServletRequest httpServletRequest) {
+        super(httpServletRequest);
+    }
 
     /**
      * 列出所有
@@ -40,7 +40,7 @@ public class ModuleTypeConfigController extends CurdController<ModuleTypeConfig>
 
     @Override
     protected R all() {
-        return data(iModuleTypeConfigService.list());
+        return data(iModuleTemplateConfigService.list());
     }
 
     /**
@@ -50,7 +50,7 @@ public class ModuleTypeConfigController extends CurdController<ModuleTypeConfig>
     @GetMapping
     public R queryForPage(@RequestParam Long protocolId) {
 
-        return data(iModuleTypeConfigService.all(protocolId));
+        return data(iModuleTemplateConfigService.all(protocolId));
     }
 
 }

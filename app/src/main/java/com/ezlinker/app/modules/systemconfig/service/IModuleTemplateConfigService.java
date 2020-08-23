@@ -1,7 +1,7 @@
 package com.ezlinker.app.modules.systemconfig.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ezlinker.app.modules.systemconfig.model.ModuleTypeConfig;
+import com.ezlinker.app.modules.systemconfig.model.ModuleTemplateConfig;
 
 import java.util.List;
 
@@ -13,11 +13,12 @@ import java.util.List;
  * @author wangwenhai
  * @since 2020-03-09
  */
-public interface IModuleTypeConfigService extends IService<ModuleTypeConfig> {
+public interface IModuleTemplateConfigService extends IService<ModuleTemplateConfig> {
     /**
      * 根据协议查模块类型
+     *
      * @param protocolTypeId
      * @return
      */
-    List<ModuleTypeConfig> all(Long protocolTypeId);
+    List<ModuleTemplateConfig> all(Long protocolTypeId);
 }

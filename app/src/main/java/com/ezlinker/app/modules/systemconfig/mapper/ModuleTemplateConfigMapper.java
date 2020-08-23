@@ -1,7 +1,7 @@
 package com.ezlinker.app.modules.systemconfig.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ezlinker.app.modules.systemconfig.model.ModuleTypeConfig;
+import com.ezlinker.app.modules.systemconfig.model.ModuleTemplateConfig;
 
 import java.util.List;
 
@@ -13,11 +13,12 @@ import java.util.List;
  * @author wangwenhai
  * @since 2020-03-09
  */
-public interface ModuleTypeConfigMapper extends BaseMapper<ModuleTypeConfig> {
+public interface ModuleTemplateConfigMapper extends BaseMapper<ModuleTemplateConfig> {
     /**
      * 根据协议查模块类型
+     *
      * @param protocolTypeId
      * @return
      */
-    List<ModuleTypeConfig> all(Long protocolTypeId);
+    List<ModuleTemplateConfig> all(Long protocolTypeId);
 }

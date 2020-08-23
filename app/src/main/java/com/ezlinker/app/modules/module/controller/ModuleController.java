@@ -12,7 +12,7 @@ import com.ezlinker.app.modules.module.model.Module;
 import com.ezlinker.app.modules.module.service.IModuleService;
 import com.ezlinker.app.modules.module.service.ModuleDataService;
 import com.ezlinker.app.modules.module.service.ModuleLogService;
-import com.ezlinker.app.modules.systemconfig.service.IModuleTypeConfigService;
+import com.ezlinker.app.modules.systemconfig.service.IModuleTemplateConfigService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -46,7 +46,7 @@ public class ModuleController extends CurdController<Module> {
     DeviceDataService deviceDataService;
 
     @Resource
-    IModuleTypeConfigService iModuleTypeConfigService;
+    IModuleTemplateConfigService iModuleTemplateConfigService;
 
     public ModuleController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest);
@@ -68,7 +68,7 @@ public class ModuleController extends CurdController<Module> {
      */
     @GetMapping("/types")
     public R getType() {
-        return data(iModuleTypeConfigService.list());
+        return data(iModuleTemplateConfigService.list());
     }
 
 

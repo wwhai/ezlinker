@@ -86,6 +86,9 @@ spring:
     overwrite-existing-jobs: true
 
 
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 #  debug log
 logging:
   level:

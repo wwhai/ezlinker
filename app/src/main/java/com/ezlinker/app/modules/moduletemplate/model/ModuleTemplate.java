@@ -108,5 +108,32 @@ public class ModuleTemplate extends XEntity {
      * 图标
      */
     private String icon;
+    /**
+     * 事件配置
+     * name: 名称
+     * command: 指令
+     * on_data: 当数据到达以后，这里是个回调，一般是个JS函数
+     * [
+     * {
+     * "name": "点击",
+     * "command": "on",
+     * "on_data": "function(data) ->{//---}"
+     * }
+     * ]
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Action> action;
+
+    public static class Action {
+        // 对应 trigger
+        public String name;
+        // 对应 action
+        // 当事件触发的时候，这里还需要进行选择，根据Value的值，做相应的操作
+        // if value == "SEND_DATA" ->> send to a client
+        // ....
+        public String value;
+        // 对应描述
+        public String description;
+    }
 
 }

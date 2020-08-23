@@ -1,9 +1,9 @@
 package com.ezlinker.app.modules.systemconfig.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ezlinker.app.modules.systemconfig.mapper.ModuleTypeConfigMapper;
-import com.ezlinker.app.modules.systemconfig.model.ModuleTypeConfig;
-import com.ezlinker.app.modules.systemconfig.service.IModuleTypeConfigService;
+import com.ezlinker.app.modules.systemconfig.mapper.ModuleTemplateConfigMapper;
+import com.ezlinker.app.modules.systemconfig.model.ModuleTemplateConfig;
+import com.ezlinker.app.modules.systemconfig.service.IModuleTemplateConfigService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,13 +18,13 @@ import java.util.List;
  * @since 2020-03-09
  */
 @Service
-public class ModuleTypeConfigServiceImpl extends ServiceImpl<ModuleTypeConfigMapper, ModuleTypeConfig> implements IModuleTypeConfigService {
+public class ModuleTypeConfigServiceImpl extends ServiceImpl<ModuleTemplateConfigMapper, ModuleTemplateConfig> implements IModuleTemplateConfigService {
 
     @Resource
-    ModuleTypeConfigMapper moduleTypeConfigMapper;
+    ModuleTemplateConfigMapper moduleTypeConfigMapper;
 
     @Override
-    public List<ModuleTypeConfig> all(Long protocolTypeId) {
+    public List<ModuleTemplateConfig> all(Long protocolTypeId) {
         return moduleTypeConfigMapper.all(protocolTypeId);
     }
 }

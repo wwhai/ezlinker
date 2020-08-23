@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ezlinker.app.modules.systemconfig.mapper.ModuleTypeConfigMapper">
+<mapper namespace="com.ezlinker.app.modules.systemconfig.mapper.ModuleTemplateConfigMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.systemconfig.model.ModuleTypeConfig">
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.systemconfig.model.ModuleTemplateConfig">
         <result column="id" property="id"/>
         <result column="record_version" property="recordVersion"/>
         <result column="x" property="x"/>
@@ -12,10 +12,12 @@
         <result column="name" property="name"/>
         <result column="type" property="type"/>
         <result column="icon" property="icon"/>
+        <result column="action_config" property="actionConfig"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
         <result column="description" property="description"/>
     </resultMap>
 
-    <select id="all" resultType="com.ezlinker.app.modules.systemconfig.model.ModuleTypeConfig"
+    <select id="all" resultType="com.ezlinker.app.modules.systemconfig.model.ModuleTemplateConfig"
             parameterType="java.lang.Long">
         SELECT
                 *
@@ -31,7 +33,7 @@
             WHERE
                 A.protocol_type_id = #{protocolTypeId}
                 ) C
-                LEFT JOIN ez_module_type_config D ON ( C.module_type_id = D.id )
+                LEFT JOIN ez_module_template_config D ON ( C.module_type_id = D.id )
     </select>
 
 
