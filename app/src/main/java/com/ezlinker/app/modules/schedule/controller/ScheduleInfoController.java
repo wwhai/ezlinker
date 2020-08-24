@@ -39,16 +39,19 @@ public class ScheduleInfoController extends CurdController<ScheduleInfo> {
         super(httpServletRequest);
     }
 
+    @Override
+    protected R add(ScheduleInfo scheduleInfo) throws XException {
+        return super.add(scheduleInfo);
+    }
 
     /**
      * 删除
      *
      * @param ids
      * @return
-     * @throws XException
      */
     @Override
-    protected R delete(@PathVariable Integer[] ids) throws XException {
+    protected R delete(@PathVariable Integer[] ids) {
         boolean ok = iScheduleInfoService.removeByIds(Arrays.asList(ids));
         return ok ? success() : fail();
     }

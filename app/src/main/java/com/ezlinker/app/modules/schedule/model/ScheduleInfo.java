@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.ezlinker.app.common.model.XEntity;
-import com.ezlinker.app.config.quartz.ScheduleData;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,13 +11,13 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
  * <p>
- * 定时任务是作用在产品之上的,
+ * 定时任务是作用在产品之上的,业务数据
  * 生产出来设备以后由用户决定是否开启.
  * </p>
  *
@@ -47,100 +46,77 @@ public class ScheduleInfo extends XEntity {
      */
     public static int STOP = 2;
 
+    public static String DEFAULT_JOB_GROUP = "DEFAULT_JOB_GROUP";
+    public static String DEFAULT_TRIGGER_GROUP = "DEFAULT_TRIGGER_GROUP";
 
     /**
      * 关联的产品ID
      */
-    @NotNull(message = "请绑定产品ID")
-    private Long linkId;
-    /**
-     * 任务描述
-     */
-    private String taskDescription;
+    @NotNull(message = "请绑定设备")
+    private Long deviceId;
 
     /**
      * 任务名称
      */
     @NotEmpty(message = "请驶入定时任务名称")
 
-    private String taskName;
+    private String jobName;
 
     /**
      * 任务组名称
      */
     @JsonIgnore
-    private String taskGroup = "DEFAULT_GROUP";
+    private String jobGroup = DEFAULT_JOB_GROUP;
 
     /**
      * 触发器名称
      */
     @JsonIgnore
 
-    private String triggerName = "DEFAULT_TRIGGER";
+    private String triggerName;
 
     /**
      * 触发器组
      */
     @JsonIgnore
 
-    private String triggerGroup = "DEFAULT_TRIGGER_GROUP";
+    private String triggerGroup = DEFAULT_TRIGGER_GROUP;
 
     /**
      * 表达式
      */
     @NotEmpty(message = "Cron表达式不可为空")
 
-    private String triggerCronExpression;
+    private String cronExpression;
 
     /**
      * 目标执行类类名
      */
     @JsonIgnore
 
-    private String executeClassName;
+    private String executeClass;
 
     /**
-     * 执行类的具体执行方法
-     */
-    @JsonIgnore
-
-    private String executeMethodName;
-
-    /**
-     * 数据目标所在表集合","分割用于统计
-     */
-    @JsonIgnore
-
-    private String targetTable;
-
-    /**
-     * 是否启动
-     */
-
-    private Boolean isStart = false;
-
-    /**
-     * 0删，1允正常
+     *
      */
     private Integer status = STOP;
 
     /**
-     * 创建人id
-     */
-
-    private String updatedId;
-
-    /**
-     * 更新时间
-     */
-    private Date updatedTime;
-
-    /**
      * 计划任务的指令
      */
-    @NotEmpty(message = "数据域不可为空")
+    @NotEmpty(message = "指令不可为空")
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<ScheduleData> scheduleData;
+    private Map<String, Object> scheduleData;
+    /**
+     * 作用点
+     */
+    @NotEmpty(message = "作用点不可为空")
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Long> points;
 
+    /**
+     * 任务描述
+     */
+    private String description;
 
 }

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @program: ezlinker
@@ -54,6 +56,11 @@ public abstract class CurdController<T> extends XController {
      */
     @PostMapping("/dynamicAdd")
     protected R dynamicAdd(XRequestArgs<T> args) throws XException {
+        return success();
+    }
+
+    @PostMapping("/dynamicAdds")
+    protected R dynamicAdd(List<? extends HashMap<String, Object>> args) throws XException {
         return success();
     }
 

@@ -25,7 +25,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("ez_device")
+@TableName(value = "ez_device", autoResultMap = true)
 public class Device extends XEntity {
 
     private static final long serialVersionUID = 1L;

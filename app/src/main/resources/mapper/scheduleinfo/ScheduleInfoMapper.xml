@@ -5,28 +5,20 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.schedule.model.ScheduleInfo">
         <result column="id" property="id"/>
-        <result column="link_id" property="linkId"/>
-        <result column="task_description" property="taskDescription"/>
-        <result column="task_name" property="taskName"/>
-        <result column="task_group" property="taskGroup"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="description" property="description"/>
+        <result column="job_name" property="jobName"/>
+        <result column="job_group" property="jobGroup"/>
         <result column="trigger_name" property="triggerName"/>
         <result column="trigger_group" property="triggerGroup"/>
-        <result column="trigger_cron_expression" property="triggerCronExpression"/>
-        <result column="execute_class_name" property="executeClassName"/>
-        <result column="execute_method_name" property="executeMethodName"/>
-        <result column="target_table" property="targetTable"/>
-        <result column="is_start" property="isStart"/>
+        <result column="cron_expression" property="cronExpression"/>
+        <result column="execute_class" property="executeClass"/>
         <result column="status" property="status"/>
         <result column="schedule_data" property="scheduleData"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
-        <result column="updated_id" property="updatedId"/>
-        <result column="updated_time" property="updatedTime"/>
-    </resultMap>
+        <result column="points" property="points"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id,link_id,
-        task_description, task_name, task_group, trigger_name, trigger_group, trigger_cron_expression, execute_class_name, execute_method_name, schedule_data,target_table, is_start, status, updated_id, updated_time
-    </sql>
+    </resultMap>
 
 </mapper>

@@ -1,6 +1,8 @@
 package com.ezlinker.app.modules.schedule.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.ezlinker.app.common.model.XEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,11 +10,11 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.HashMap;
 
 /**
  * <p>
- *
+ * 模板，不具备业务功能，仅仅为了保存一些将来Copy的数据字段值
  * </p>
  *
  * @author wangwenhai
@@ -24,7 +26,7 @@ import java.time.LocalDateTime;
 @TableName("ez_schedule_template")
 public class ScheduleTemplate extends XEntity {
 
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 定时任务作用的产品
@@ -39,26 +41,21 @@ public class ScheduleTemplate extends XEntity {
     private String taskName;
 
     /**
-     * 任务描述
-     */
-    private String taskDescription;
-
-    /**
      * CronTab表达式
      */
     @NotEmpty(message = "表达式不可为空")
-    private String triggerCronExpression;
+    private String cronExpression;
 
     /**
-     * 指令内容
+     * 计划任务的指令
      */
     @NotEmpty(message = "指令不可为空")
-    private String scheduleData;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private HashMap<String, Object> scheduleData;
 
     /**
-     * 更新时间
+     * 任务描述
      */
-    private LocalDateTime updatedTime;
-
+    private String taskDescription;
 
 }
