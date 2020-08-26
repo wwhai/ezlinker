@@ -3,7 +3,7 @@ package com.ezlinker.app.modules.analyse.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
-import com.ezlinker.app.emqintegeration.bean.NodeInfo;
+import com.ezlinker.app.emqintegeration.message.NodeInfo;
 import com.ezlinker.app.emqintegeration.monitor.EMQMonitorV4;
 import com.ezlinker.app.modules.systemconfig.model.EmqxConfig;
 import com.ezlinker.app.modules.systemconfig.service.IEmqxConfigService;

@@ -1,4 +1,4 @@
-package com.ezlinker.app.wsintegeration;
+package com.ezlinker.app.config.websocket;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -42,7 +42,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
             @Override
             public void handleTransportError(WebSocketSession webSocketSession, Throwable throwable) {
-
+                throwable.printStackTrace();
             }
 
             @Override
@@ -55,8 +55,5 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 return false;
             }
         }, "/ws");
-
-
     }
-
 }

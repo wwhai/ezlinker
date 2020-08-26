@@ -21,38 +21,6 @@ public class SystemRealTimeMessage extends ApplicationEvent {
         super(source);
     }
 
-    public SystemRealTimeMessage(Object source, String destination, String type, String content) {
-        super(source);
-        this.destination = destination;
-        this.type = type;
-        this.content = content;
-    }
-
-    public String getDestination() {
-        return destination;
-    }
-
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     @Override
     public String toString() {
         return "SystemRealTimeMessage{" +

@@ -1,4 +1,4 @@
-package com.ezlinker.app.handler;
+package com.ezlinker.app.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;

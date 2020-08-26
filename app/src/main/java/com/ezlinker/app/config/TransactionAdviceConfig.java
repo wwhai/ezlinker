@@ -32,25 +32,13 @@ public class TransactionAdviceConfig {
         pointcut.setExpression(AOP_POINTCUT_EXPRESSION);
         DefaultTransactionAttribute txAttrREQUIRED = new DefaultTransactionAttribute();
         txAttrREQUIRED.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-
         DefaultTransactionAttribute txAttrREQUIREDREADONLY = new DefaultTransactionAttribute();
         txAttrREQUIREDREADONLY.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         txAttrREQUIREDREADONLY.setReadOnly(true);
-
         NameMatchTransactionAttributeSource source = new NameMatchTransactionAttributeSource();
-
         source.addTransactionalMethod("save*", txAttrREQUIRED);
         source.addTransactionalMethod("delete*", txAttrREQUIRED);
         source.addTransactionalMethod("update*", txAttrREQUIRED);
-//        source.addTransactionalMethod("exec*", txAttrREQUIRED);
-//        source.addTransactionalMethod("set*", txAttrREQUIRED);
-//        source.addTransactionalMethod("get*", txAttrREQUIREDREADONLY);
-//        source.addTransactionalMethod("query*", txAttrREQUIREDREADONLY);
-//        source.addTransactionalMethod("find*", txAttrREQUIREDREADONLY);
-//        source.addTransactionalMethod("list*", txAttrREQUIREDREADONLY);
-//        source.addTransactionalMethod("count*", txAttrREQUIREDREADONLY);
-//        source.addTransactionalMethod("is*", txAttrREQUIREDREADONLY);
-
         return new DefaultPointcutAdvisor(pointcut, new TransactionInterceptor(transactionManager, source));
     }
 }

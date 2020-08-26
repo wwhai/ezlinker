@@ -10,7 +10,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @program: ezlinker
@@ -75,7 +75,7 @@ public class RepeatedlyReadRequestWrapper extends HttpServletRequestWrapper {
             retStr.append(str);
         }
         if (StringUtils.isNotBlank(retStr.toString())) {
-            return retStr.toString().getBytes(Charset.forName("UTF-8"));
+            return retStr.toString().getBytes(StandardCharsets.UTF_8);
         }
         return null;
     }

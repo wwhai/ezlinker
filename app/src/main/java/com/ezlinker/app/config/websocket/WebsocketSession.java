@@ -1,14 +1,14 @@
-package com.ezlinker.app.wsintegeration;
+package com.ezlinker.app.config.websocket;
 
 import lombok.Data;
 
 /**
  * @author wangwenhai
- * @date 2020/8/23
- * File description: Websocket Session
+ * @date 2020/8/26
+ * File description: session
  */
 @Data
-class RequestSession {
+public class WebsocketSession {
     // 请求ID
     private String requestId;
     // 消息来自，比如on-click

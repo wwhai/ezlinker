@@ -24,12 +24,12 @@ public class QuartzService {
     @Resource
     private Scheduler scheduler;
 
-    public static JobKey getJobKey(String name, String group) {
+    private static JobKey getJobKey(String name, String group) {
 
         return new JobKey(JOB_NAME_PREFIX + "-DID:" + name, group);
     }
 
-    public static TriggerKey getTriggerKey(String name, String group) {
+    private static TriggerKey getTriggerKey(String name, String group) {
 
         return new TriggerKey(TRIGGER_NAME_PREFIX + "-DID:" + name, group);
     }
@@ -42,8 +42,8 @@ public class QuartzService {
      * @throws SchedulerException
      */
     public void addSendCmdJob(Long deviceId, String groupName, String cronExpression, Map<String, Object> jobData) throws SchedulerException {
-        String taskName = "-DID:" + deviceId;
-        addJob(ScheduleSendDataJob.class, taskName, groupName, cronExpression, jobData);
+        String jobName = "-DID:" + deviceId;
+        addJob(ScheduleSendDataJob.class, jobName, groupName, cronExpression, jobData);
     }
 
     /**
@@ -54,22 +54,22 @@ public class QuartzService {
      * @throws SchedulerException
      */
     public void addGetStateJob(Long deviceId, String groupName, String cronExpression, Map<String, Object> jobData) throws SchedulerException {
-        String taskName = "-DID:" + deviceId;
+        String jobName = "-DID:" + deviceId;
 
-        addJob(GetStateJob.class, taskName, groupName, cronExpression, jobData);
+        addJob(GetStateJob.class, jobName, groupName, cronExpression, jobData);
     }
 
     /**
      * @param clazz
-     * @param taskName
+     * @param jobName
      * @param groupName
      * @param cronExpression
      * @param jobData
      * @throws SchedulerException
      */
-    private void addJob(Class<? extends Job> clazz, String taskName, String groupName, String cronExpression, Map<String, Object> jobData) throws SchedulerException {
+    private void addJob(Class<? extends Job> clazz, String jobName, String groupName, String cronExpression, Map<String, Object> jobData) throws SchedulerException {
 
-        JobKey jobKey = new JobKey(JOB_NAME_PREFIX + taskName, groupName);
+        JobKey jobKey = new JobKey(JOB_NAME_PREFIX + jobName, groupName);
         JobDetail jobDetail = JobBuilder.newJob(clazz)
                 .withDescription("JUST_A_JOB")
                 .withIdentity(jobKey)
@@ -77,7 +77,7 @@ public class QuartzService {
         if (jobData != null && jobData.size() > 0) {
             jobDetail.getJobDataMap().putAll(jobData);
         }
-        TriggerKey triggerKey = new TriggerKey(TRIGGER_NAME_PREFIX + taskName, groupName);
+        TriggerKey triggerKey = new TriggerKey(TRIGGER_NAME_PREFIX + jobName, groupName);
         Trigger trigger = TriggerBuilder.newTrigger()
                 .withIdentity(triggerKey)
                 .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)
@@ -89,16 +89,16 @@ public class QuartzService {
     }
 
     /**
-     * @param taskName
+     * @param jobName
      * @param cronExpression
      * @param group
      */
-    public void updateJob(String taskName, String cronExpression, String group) {
+    public void updateJob(String jobName, String cronExpression, String group) {
         try {
-            TriggerKey triggerKey = new TriggerKey(taskName, group);
+            TriggerKey triggerKey = new TriggerKey(jobName, group);
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
             trigger = trigger.getTriggerBuilder()
-                    .withIdentity(getTriggerKey(taskName, group))
+                    .withIdentity(getTriggerKey(jobName, group))
                     .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                     .build();
             // 重启触发器

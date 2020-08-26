@@ -1,4 +1,4 @@
-package com.ezlinker.app.emqintegeration.bean;
+package com.ezlinker.app.emqintegeration.message;
 
 import lombok.Data;
 

@@ -226,16 +226,7 @@
     </dependencies>
     <profiles>
         <profile>
-            <id>dev</id>
-        </profile>
-        <profile>
-            <id>devhome</id>
-        </profile>
-        <profile>
-            <id>devcom</id>
-        </profile>
-        <profile>
-            <id>test</id>
+            <id>dev-new</id>
         </profile>
     </profiles>
 
@@ -256,41 +247,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <!-- Docker maven plugin -->
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.9</version>
-                <executions>
-                    <execution>
-                        <id>tag-latest</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>build</goal>
-                            <goal>tag</goal>
-                            <goal>push</goal>
-                        </goals>
-                        <configuration>
-                            <tag>latest</tag>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>tag-version</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>build</goal>
-                            <goal>tag</goal>
-                            <goal>push</goal>
-                        </goals>
-                        <configuration>
-                            <tag>${project.version}</tag>
-                        </configuration>
-                    </execution>
-                </executions>
-
-            </plugin>
-            <!-- Docker maven plugin -->
         </plugins>
     </build>
 
