@@ -1,4 +1,4 @@
-package com.ezlinker.app.modules.cloudfunction.controller;
+package com.ezlinker.app.modules.cloudfunc.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -7,8 +7,8 @@ import com.ezlinker.app.common.exception.BizException;
 import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
-import com.ezlinker.app.modules.cloudfunction.model.CloudFunction;
-import com.ezlinker.app.modules.cloudfunction.service.ICloudFunctionService;
+import com.ezlinker.app.modules.cloudfunc.model.CloudFunction;
+import com.ezlinker.app.modules.cloudfunc.service.ICloudFunctionService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

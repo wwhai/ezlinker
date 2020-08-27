@@ -1,7 +1,7 @@
-package com.ezlinker.app.modules.cloudfunction.service;
+package com.ezlinker.app.modules.cloudfunc.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ezlinker.app.modules.cloudfunction.model.CloudFunction;
+import com.ezlinker.app.modules.cloudfunc.model.CloudFunction;
 
 /**
  * <p>

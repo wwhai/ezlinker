@@ -1,4 +1,4 @@
-package com.ezlinker.app.modules.cloudfunction.model;
+package com.ezlinker.app.modules.cloudfunc.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ezlinker.app.common.model.XEntity;

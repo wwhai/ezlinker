@@ -2,6 +2,7 @@ package com.ezlinker.app.config.websocket;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -24,6 +25,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Resource
     MongoTemplate mongoTemplate;
 
+    @Scheduled(cron = "")
+    public void pushData(){
+
+    }
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
         webSocketHandlerRegistry.addHandler(new WebSocketHandler() {

@@ -1,9 +1,9 @@
-package com.ezlinker.app.modules.cloudfunction.service.impl;
+package com.ezlinker.app.modules.cloudfunc.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ezlinker.app.modules.cloudfunction.mapper.CloudFunctionMapper;
-import com.ezlinker.app.modules.cloudfunction.model.CloudFunction;
-import com.ezlinker.app.modules.cloudfunction.service.ICloudFunctionService;
+import com.ezlinker.app.modules.cloudfunc.mapper.CloudFunctionMapper;
+import com.ezlinker.app.modules.cloudfunc.model.CloudFunction;
+import com.ezlinker.app.modules.cloudfunc.service.ICloudFunctionService;
 import org.springframework.stereotype.Service;
 
 /**

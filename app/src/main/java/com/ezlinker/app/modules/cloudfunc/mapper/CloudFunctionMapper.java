@@ -1,7 +1,7 @@
-package com.ezlinker.app.modules.cloudfunction.mapper;
+package com.ezlinker.app.modules.cloudfunc.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ezlinker.app.modules.cloudfunction.model.CloudFunction;
+import com.ezlinker.app.modules.cloudfunc.model.CloudFunction;
 
 /**
  * <p>
