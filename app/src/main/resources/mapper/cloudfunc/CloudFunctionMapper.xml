@@ -3,7 +3,7 @@
 <mapper namespace="com.ezlinker.app.modules.cloudfunction.mapper.CloudFunctionMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.cloudfunction.model.CloudFunction">
+    <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.cloudfunc.model.CloudFunction">
         <result column="id" property="id"/>
         <result column="record_version" property="recordVersion"/>
         <result column="x" property="x"/>

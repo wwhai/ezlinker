@@ -25,7 +25,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Resource
     MongoTemplate mongoTemplate;
 
-    @Scheduled(cron = "")
+    //@Scheduled(cron = "")
     public void pushData(){
 
     }
