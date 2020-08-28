@@ -123,7 +123,7 @@ public class ProductController extends XController {
 
     @GetMapping("/{id}")
     public R get(@PathVariable Long id) throws XException {
-        Product product = iProductService.getById(id);
+        Product product = iProductService.getDetail(id);
         if (product == null) {
             throw new BizException("Product not exists!", "产品不存在");
         }

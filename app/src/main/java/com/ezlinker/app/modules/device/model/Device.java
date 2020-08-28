@@ -5,14 +5,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.ezlinker.app.common.model.XEntity;
 import com.ezlinker.app.modules.device.pojo.FieldParam;
-import com.ezlinker.app.modules.module.model.Module;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -83,11 +81,6 @@ public class Device extends XEntity {
     private Integer state;
 
     /**
-     * 运行的状态
-     */
-    private String statuses;
-
-    /**
      * MQTT用户名
      */
     private String username;
@@ -122,30 +115,4 @@ public class Device extends XEntity {
      * 描述
      */
     private String description;
-
-    /**
-     * 模块
-     */
-    @TableField(exist = false)
-    private List<Module> modules;
-
-    @TableField(exist = false)
-    Set<String> tags;
-
-
-    /**
-     * 协议类型,到时候还需要根据协议配置加载的模块类型,协议没那么多支持
-     * TCP 0
-     * MQTT 1
-     * HTTP 2
-     * COAP 3
-     */
-    public static final int TCP = 0;
-    public static final int MQTT = 1;
-    public static final int HTTP = 2;
-    public static final int COAP = 3;
-
-
-    private Integer protocol;
-
 }

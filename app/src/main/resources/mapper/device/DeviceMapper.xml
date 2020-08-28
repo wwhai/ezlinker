@@ -19,13 +19,11 @@
         <result column="type" property="type" />
         <result column="last_active" property="lastActive" />
         <result column="state" property="state" />
-        <result column="statuses" property="statuses" />
         <result column="username" property="username" />
         <result column="client_id" property="clientId"/>
         <result column="password" property="password" />
         <result column="is_superuser" property="isSuperuser" />
         <result column="token" property="token" />
-        <result column="protocol" property="protocol"/>
         <result column="parameters" property="parameters" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler" />
         <result column="description" property="description" />
     </resultMap>

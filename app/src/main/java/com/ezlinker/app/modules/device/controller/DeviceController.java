@@ -26,7 +26,7 @@ import com.ezlinker.app.modules.product.model.Product;
 import com.ezlinker.app.modules.product.service.IProductService;
 import com.ezlinker.app.modules.systemconfig.service.IDeviceProtocolConfigService;
 import com.ezlinker.app.utils.IDKeyUtil;
-import com.ezlinker.app.utils.ModuleTokenUtil;
+import com.ezlinker.app.utils.TokenUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,8 +102,6 @@ public class DeviceController extends CurdController<Device> {
         if (device == null) {
             throw new BizException("Device not exist", "设备不存在");
         }
-
-        addModules(device);
         return data(device);
     }
 
@@ -137,19 +135,10 @@ public class DeviceController extends CurdController<Device> {
         queryWrapper.like(name != null, "name", name);
         queryWrapper.like(industry != null, "industry", industry);
         queryWrapper.orderByDesc("create_time");
-
         IPage<Device> devicePage = iDeviceService.page(new Page<>(current, size), queryWrapper);
-        for (Device device : devicePage.getRecords()) {
-            addModules(device);
-        }
-
         return data(devicePage);
     }
 
-    private void addModules(Device device) {
-        List<Module> modules = iModuleService.list(new QueryWrapper<Module>().eq("device_id", device.getId()));
-        device.setModules(modules);
-    }
 
     /**
      * 创建设备
@@ -175,13 +164,13 @@ public class DeviceController extends CurdController<Device> {
         String clientId = SecureUtil.md5(username);
         String password = SecureUtil.md5(clientId);
         form.setParameters(product.getParameters())
-                .setProtocol(product.getProtocol())
                 .setUsername(username)
                 .setPassword(password)
                 .setClientId(clientId)
                 .setProductId(product.getId())
                 .setProjectId(product.getProjectId())
                 .setLogo(product.getLogo())
+                .setToken(TokenUtil.token(clientId))
                 .setSn("SN" + idKeyUtil.nextId());
         // 保存设备
 
@@ -212,7 +201,7 @@ public class DeviceController extends CurdController<Device> {
             stringBuilder.replace(stringBuilder.length() - 1, stringBuilder.length(), "").append("]");
             // 生成给Token，格式：clientId::[field1,field2,field3······]
             // token里面包含了模块的字段名,这样在数据入口处可以进行过滤。
-            String token = ModuleTokenUtil.token(clientId + "::" + stringBuilder);
+            String token = TokenUtil.token(clientId + "::" + stringBuilder);
             newModule.setToken(token);
             newModule.setIcon(moduleTemplate.getIcon());
             // 如果是流媒体设备 需要在这里做一些操作
@@ -235,39 +224,36 @@ public class DeviceController extends CurdController<Device> {
         /**
          * 给MQTT协议的[设备]安装口令
          */
-        if (product.getProtocol() == Device.MQTT) {
 
-            // 数据上行
-            MqttTopic s2cTopic = new MqttTopic();
-            s2cTopic.setAccess(TOPIC_SUB)
-                    .setType(MqttTopic.S2C)
-                    .setClientId(clientId)
-                    .setDeviceId(form.getId())
-                    .setTopic("mqtt/out/" + form.getClientId() + "/s2c")
-                    .setUsername(username);
-            // 数据下行
-            MqttTopic c2sTopic = new MqttTopic();
-            c2sTopic.setAccess(TOPIC_PUB)
-                    .setType(MqttTopic.C2S)
-                    .setDeviceId(form.getId())
-                    .setClientId(clientId)
-                    .setTopic("mqtt/in/" + form.getClientId() + "/c2s")
-                    .setUsername(username);
-            // 状态上报
-            MqttTopic statusTopic = new MqttTopic();
-            statusTopic.setAccess(TOPIC_PUB)
-                    .setType(MqttTopic.STATUS)
-                    .setUsername(username)
-                    .setClientId(clientId)
-                    .setDeviceId(form.getId())
-                    .setTopic("mqtt/in/" + form.getClientId() + "/status");
-            // 生成
-            iMqttTopicService.save(s2cTopic);
-            iMqttTopicService.save(c2sTopic);
-            iMqttTopicService.save(statusTopic);
-
-        }
-        return success();
+        // 数据上行
+        MqttTopic s2cTopic = new MqttTopic();
+        s2cTopic.setAccess(TOPIC_SUB)
+                .setType(MqttTopic.S2C)
+                .setClientId(clientId)
+                .setDeviceId(form.getId())
+                .setTopic("mqtt/out/" + form.getClientId() + "/s2c")
+                .setUsername(username);
+        // 数据下行
+        MqttTopic c2sTopic = new MqttTopic();
+        c2sTopic.setAccess(TOPIC_PUB)
+                .setType(MqttTopic.C2S)
+                .setDeviceId(form.getId())
+                .setClientId(clientId)
+                .setTopic("mqtt/in/" + form.getClientId() + "/c2s")
+                .setUsername(username);
+        // 状态上报
+        MqttTopic statusTopic = new MqttTopic();
+        statusTopic.setAccess(TOPIC_PUB)
+                .setType(MqttTopic.STATUS)
+                .setUsername(username)
+                .setClientId(clientId)
+                .setDeviceId(form.getId())
+                .setTopic("mqtt/in/" + form.getClientId() + "/status");
+        // 生成
+        iMqttTopicService.save(s2cTopic);
+        iMqttTopicService.save(c2sTopic);
+        iMqttTopicService.save(statusTopic);
+        return data(form);
     }
 
     /**
