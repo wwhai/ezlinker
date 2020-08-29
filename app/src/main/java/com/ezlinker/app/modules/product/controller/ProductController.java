@@ -63,7 +63,7 @@ public class ProductController extends XController {
      */
 
     @PostMapping
-    protected R add(@RequestBody @Valid Product product)   {
+    protected R add(@RequestBody @Valid Product product) {
 
         boolean ok = iProductService.save(product);
         return ok ? data(product) : fail();
@@ -136,27 +136,25 @@ public class ProductController extends XController {
      *
      * @param projectId 所属项目ID
      * @param name      名称
-     * @param type      类型
      * @param current   页码
      * @param size      页长
      * @return
      */
     @GetMapping
     public R queryForPage(
-            @RequestParam Long projectId,
-            @RequestParam Integer current,
-            @RequestParam Integer size,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) Integer type) {
+            @RequestParam(required = false) Long projectId,
+            @RequestParam(required = false, defaultValue = "1") Integer current,
+            @RequestParam(required = false, defaultValue = "20") Integer size,
+            @RequestParam(required = false) String name) {
         QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("project_id", projectId);
-        queryWrapper.eq(type != null, "type", type);
+        if (projectId != null) {
+            queryWrapper.eq("project_id", projectId);
+        }
         queryWrapper.like(name != null, "name", name);
         queryWrapper.orderByDesc("create_time");
         IPage<Product> projectPage = iProductService.page(new Page<>(current, size), queryWrapper);
         return data(projectPage);
     }
-
 
 
     /**

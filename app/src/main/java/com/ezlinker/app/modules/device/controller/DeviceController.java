@@ -111,27 +111,25 @@ public class DeviceController extends CurdController<Device> {
      * @param current
      * @param size
      * @param name
-     * @param type
      * @return
      */
     @GetMapping
     public R queryForPage(
-            @RequestParam Long productId,
-            @RequestParam Integer current,
-            @RequestParam Integer size,
+            @RequestParam(required = false) Long productId,
+            @RequestParam(required = false, defaultValue = "1") Integer current,
+            @RequestParam(required = false, defaultValue = "20") Integer size,
             @RequestParam(required = false) Long projectId,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String industry,
             @RequestParam(required = false) String sn,
-            @RequestParam(required = false) Integer type,
             @RequestParam(required = false) String model) {
 
         QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
+
         queryWrapper.eq(projectId != null, "project_id", projectId);
         queryWrapper.eq(productId != null, "product_id", productId);
         queryWrapper.eq(sn != null, "sn", sn);
         queryWrapper.eq(model != null, "model", model);
-        queryWrapper.eq(type != null, "type", type);
         queryWrapper.like(name != null, "name", name);
         queryWrapper.like(industry != null, "industry", industry);
         queryWrapper.orderByDesc("create_time");
