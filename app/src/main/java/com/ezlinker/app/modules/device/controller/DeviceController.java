@@ -128,8 +128,8 @@ public class DeviceController extends CurdController<Device> {
 
         queryWrapper.eq(projectId != null, "project_id", projectId);
         queryWrapper.eq(productId != null, "product_id", productId);
-        queryWrapper.eq(sn != null, "sn", sn);
-        queryWrapper.eq(model != null, "model", model);
+        queryWrapper.like(sn != null, "sn", sn);
+        queryWrapper.like(model != null, "model", model);
         queryWrapper.like(name != null, "name", name);
         queryWrapper.like(industry != null, "industry", industry);
         queryWrapper.orderByDesc("create_time");
