@@ -53,7 +53,6 @@ public class ScheduleInfoController extends CurdController<ScheduleInfo> {
             throw new BadRequestException("error", "保存失败");
         } else {
             return data(scheduleInfo);
-
         }
     }
 

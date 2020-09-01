@@ -49,6 +49,7 @@ public abstract class CurdController<T> extends XController {
     /**
      * 2020-08-31更新
      * 后续将简单业务的新建和更新作为一个接口
+     *
      * @param t
      * @return
      * @throws XException
@@ -132,19 +133,6 @@ public abstract class CurdController<T> extends XController {
     }
 
     /**
-     * 分页不带条件查询
-     *
-     * @param current
-     * @param size
-     * @return
-     */
-    @GetMapping("/page")
-    protected R page(Integer current,
-                     Integer size) {
-        return success();
-    }
-
-    /**
      * @return
      */
     @GetMapping("/all")
@@ -160,11 +148,8 @@ public abstract class CurdController<T> extends XController {
      * @throws BadRequestException
      */
     protected final void checkModelNull(XEntity entity) throws BadRequestException {
-
         if (entity == null)
             throw new BadRequestException("资源不存在", "Resource not exists");
-
-
     }
 
     /**
@@ -232,14 +217,6 @@ public abstract class CurdController<T> extends XController {
         }
 
     }
-
-    /**
-     * @return
-     */
-    protected final QueryWrapper<T> q() {
-        return new QueryWrapper<T>();
-    }
-
     /**
      * 产生分页
      *
@@ -248,6 +225,6 @@ public abstract class CurdController<T> extends XController {
      * @return
      */
     protected final IPage<T> p(Integer current, Integer size) {
-        return new Page<T>(current, size);
+        return new Page<>(current, size);
     }
 }
