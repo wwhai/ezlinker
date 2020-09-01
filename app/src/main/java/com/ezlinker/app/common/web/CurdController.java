@@ -47,6 +47,20 @@ public abstract class CurdController<T> extends XController {
     }
 
     /**
+     * 2020-08-31更新
+     * 后续将简单业务的新建和更新作为一个接口
+     * @param t
+     * @return
+     * @throws XException
+     */
+    @PostMapping("/create")
+    protected R create(T t) throws XException {
+
+        return success();
+    }
+
+
+    /**
      * 动态参数请求
      * 一般用Map来构建
      *

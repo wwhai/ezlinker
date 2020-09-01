@@ -72,28 +72,24 @@ public class ScheduleInfo extends XEntity {
      * 触发器名称
      */
     @JsonIgnore
-
     private String triggerName;
 
     /**
      * 触发器组
      */
     @JsonIgnore
-
     private String triggerGroup = DEFAULT_TRIGGER_GROUP;
 
     /**
      * 表达式
      */
     @NotEmpty(message = "Cron表达式不可为空")
-
     private String cronExpression;
 
     /**
      * 目标执行类类名
      */
     @JsonIgnore
-
     private String executeClass;
 
     /**
@@ -104,13 +100,13 @@ public class ScheduleInfo extends XEntity {
     /**
      * 计划任务的指令
      */
-    @NotEmpty(message = "指令不可为空")
+    @JsonIgnore
     @TableField(typeHandler = JacksonTypeHandler.class)
     private Map<String, Object> scheduleData;
     /**
      * 作用点
      */
-    @NotEmpty(message = "作用点不可为空")
+    @JsonIgnore
     @TableField(typeHandler = JacksonTypeHandler.class)
     private List<Long> points;
 
