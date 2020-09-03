@@ -1,4 +1,4 @@
-package com.ezlinker.app.emqintegeration.message;
+package com.ezlinker.app.modules.emqx.message;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

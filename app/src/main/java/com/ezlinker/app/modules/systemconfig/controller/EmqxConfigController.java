@@ -6,7 +6,7 @@ import com.ezlinker.app.common.exception.BizException;
 import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
-import com.ezlinker.app.emqintegeration.monitor.EMQMonitorV4;
+import com.ezlinker.app.modules.emqx.monitor.EMQMonitorV4;
 import com.ezlinker.app.modules.systemconfig.model.EmqxConfig;
 import com.ezlinker.app.modules.systemconfig.service.IEmqxConfigService;
 import org.springframework.web.bind.annotation.*;

@@ -2,8 +2,8 @@ package com.ezlinker.app.modules.dataentry.controller;
 
 import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
-import com.ezlinker.app.emqintegeration.message.ConnectedMessage;
-import com.ezlinker.app.emqintegeration.message.DisconnectedMessage;
+import com.ezlinker.app.modules.emqx.message.ConnectedMessage;
+import com.ezlinker.app.modules.emqx.message.DisconnectedMessage;
 import com.ezlinker.app.modules.module.service.IModuleService;
 import com.ezlinker.app.modules.module.service.ModuleLogService;
 import org.springframework.web.bind.annotation.PostMapping;
