@@ -1,4 +1,4 @@
-package com.ezlinker.app.emqintegeration.monitor;
+package com.ezlinker.app.modules.emqx.monitor;
 
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSON;

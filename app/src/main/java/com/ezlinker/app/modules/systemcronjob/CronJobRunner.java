@@ -3,7 +3,7 @@ package com.ezlinker.app.modules.systemcronjob;
 import com.alibaba.fastjson.JSONObject;
 import com.ezlinker.app.common.exception.BizException;
 import com.ezlinker.app.common.utils.OSMonitor;
-import com.ezlinker.app.emqintegeration.monitor.EMQMonitorV4;
+import com.ezlinker.app.modules.emqx.monitor.EMQMonitorV4;
 import com.ezlinker.app.modules.systemconfig.model.EmqxConfig;
 import com.ezlinker.app.modules.systemconfig.service.IEmqxConfigService;
 import org.slf4j.Logger;
