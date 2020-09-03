@@ -1,7 +1,7 @@
 package com.ezlinker.app.modules.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ezlinker.app.modules.internalmessage.service.InternalMessageService;
+import com.ezlinker.app.modules.internalmsg.service.InternalMessageService;
 import com.ezlinker.app.modules.permission.model.Permission;
 import com.ezlinker.app.modules.role.model.Role;
 import com.ezlinker.app.modules.user.mapper.UserMapper;
@@ -47,6 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 获取权限列表
+     *
      * @param userId
      * @return
      */

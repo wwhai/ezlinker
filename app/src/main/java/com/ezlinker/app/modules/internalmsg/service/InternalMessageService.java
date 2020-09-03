@@ -1,7 +1,7 @@
-package com.ezlinker.app.modules.internalmessage.service;
+package com.ezlinker.app.modules.internalmsg.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.ezlinker.app.modules.internalmessage.model.InternalMessage;
+import com.ezlinker.app.modules.internalmsg.model.InternalMessage;
 import org.springframework.data.domain.Pageable;
 
 /**
@@ -34,6 +34,7 @@ public interface InternalMessageService {
 
     /**
      * 获取一项
+     *
      * @param id
      * @return
      */
@@ -50,6 +51,7 @@ public interface InternalMessageService {
 
     /**
      * 计算消息总数
+     *
      * @param userId
      * @return
      */

@@ -1,4 +1,4 @@
-package com.ezlinker.app.modules.internalmessage.model;
+package com.ezlinker.app.modules.internalmsg.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

@@ -1,9 +1,9 @@
-package com.ezlinker.app.modules.internalmessage.service.impl;
+package com.ezlinker.app.modules.internalmsg.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.ezlinker.app.modules.internalmessage.model.InternalMessage;
-import com.ezlinker.app.modules.internalmessage.service.InternalMessageService;
+import com.ezlinker.app.modules.internalmsg.model.InternalMessage;
+import com.ezlinker.app.modules.internalmsg.service.InternalMessageService;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

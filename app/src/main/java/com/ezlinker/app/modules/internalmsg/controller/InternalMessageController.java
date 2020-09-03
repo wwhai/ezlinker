@@ -1,10 +1,10 @@
-package com.ezlinker.app.modules.internalmessage.controller;
+package com.ezlinker.app.modules.internalmsg.controller;
 
 import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
-import com.ezlinker.app.modules.internalmessage.model.InternalMessage;
-import com.ezlinker.app.modules.internalmessage.service.InternalMessageService;
+import com.ezlinker.app.modules.internalmsg.model.InternalMessage;
+import com.ezlinker.app.modules.internalmsg.service.InternalMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
