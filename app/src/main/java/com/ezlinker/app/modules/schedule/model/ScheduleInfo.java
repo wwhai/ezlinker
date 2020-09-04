@@ -100,13 +100,11 @@ public class ScheduleInfo extends XEntity {
     /**
      * 计划任务的指令
      */
-    @JsonIgnore
     @TableField(typeHandler = JacksonTypeHandler.class)
     private Map<String, Object> scheduleData;
     /**
      * 作用点
      */
-    @JsonIgnore
     @TableField(typeHandler = JacksonTypeHandler.class)
     private List<Long> points;
 

@@ -1,7 +1,7 @@
 package com.ezlinker.app;
 
 import com.ezlinker.app.common.exception.BizException;
-import com.ezlinker.app.emqintegeration.monitor.EMQMonitorV4;
+import com.ezlinker.app.modules.emqx.monitor.EMQMonitorV4;
 import com.ezlinker.app.modules.systemconfig.model.EmqxConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +11,6 @@ public class EMQXV4APITest {
 
     /**
      * 测试节点是否存在
-     *
      */
     @Test
     public void testNode() throws BizException {
@@ -23,7 +22,7 @@ public class EMQXV4APITest {
                 .setDescription("test")
                 .setNodeName("node@127.0.0.1");
 
-            EMQMonitorV4.getBrokersInfo(emqxConfig);
+        EMQMonitorV4.getBrokersInfo(emqxConfig);
 
     }
 }

@@ -83,7 +83,7 @@ public class ScheduleInfoController extends CurdController<ScheduleInfo> {
                              @RequestParam Long deviceId) {
 
         QueryWrapper<ScheduleInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("debvice_id", deviceId);
+        queryWrapper.eq("device_id", deviceId);
         return data(iScheduleInfoService.page(new Page<>(current, size), queryWrapper));
     }
 
