@@ -1,10 +1,15 @@
 package com.ezlinker.app.modules.device.service.impl;
 
-import com.ezlinker.app.modules.device.model.Device;
-import com.ezlinker.app.modules.device.mapper.DeviceMapper;
-import com.ezlinker.app.modules.device.service.IDeviceService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ezlinker.app.modules.device.mapper.DeviceMapper;
+import com.ezlinker.app.modules.device.model.Device;
+import com.ezlinker.app.modules.device.service.IDeviceService;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -15,6 +20,13 @@ import org.springframework.stereotype.Service;
  * @since 2020-02-23
  */
 @Service
+@Validated
 public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements IDeviceService {
+    @Resource
+    DeviceMapper deviceMapper;
 
+    @Override
+    public IPage<Device> queryForPage(String sn, String name, String model, String industry, Page page) {
+        return deviceMapper.queryForPage(sn, name, model, industry, page);
+    }
 }

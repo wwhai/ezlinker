@@ -11,8 +11,6 @@ import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
 import com.ezlinker.app.modules.device.model.Device;
 import com.ezlinker.app.modules.device.service.IDeviceService;
-import com.ezlinker.app.modules.feature.model.Feature;
-import com.ezlinker.app.modules.feature.service.IFeatureService;
 import com.ezlinker.app.modules.module.model.Module;
 import com.ezlinker.app.modules.module.model.StreamIntegration;
 import com.ezlinker.app.modules.module.pojo.DataArea;
@@ -35,10 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -56,8 +51,6 @@ public class DeviceController extends CurdController<Device> {
     // 订阅权限
     private static final int TOPIC_SUB = 2;
 
-    @Resource
-    IFeatureService iFeatureService;
     @Resource
     IProductService iProductService;
     @Resource
@@ -127,12 +120,14 @@ public class DeviceController extends CurdController<Device> {
         QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
 
         queryWrapper.eq(projectId != null, "project_id", projectId);
-        queryWrapper.eq(productId != null, "product_id", productId);
-        queryWrapper.like(sn != null, "sn", sn);
-        queryWrapper.like(model != null, "model", model);
-        queryWrapper.like(name != null, "name", name);
-        queryWrapper.like(industry != null, "industry", industry);
+        queryWrapper.eq(productId != null, "product_id", productId).or();
+        queryWrapper.like((sn != null) && sn.length() > 0, "sn", sn).or();
+        queryWrapper.like((model != null) && model.length() > 0, "model", model).or();
+        queryWrapper.like((name != null) && name.length() > 0, "name", name).or();
+        queryWrapper.like((industry != null) && industry.length() > 0, "industry", industry);
         queryWrapper.orderByDesc("create_time");
+        // TODO 重新设计Page接口，使其可以返回项目和产品的名称
+        // IPage<Device> devicePage = iDeviceService.queryForPage(sn, name, model, industry, new Page<>(current, size));
         IPage<Device> devicePage = iDeviceService.page(new Page<>(current, size), queryWrapper);
         return data(devicePage);
     }
@@ -252,48 +247,6 @@ public class DeviceController extends CurdController<Device> {
         iMqttTopicService.save(c2sTopic);
         iMqttTopicService.save(statusTopic);
         return data(form);
-    }
-
-    /**
-     * 查询模块数据定义
-     *
-     * @param deviceId
-     * @return
-     * @throws XException
-     */
-    @GetMapping("/queryDataStructureByDeviceId")
-    public R queryDataStructureByDeviceId(@RequestParam Long deviceId) throws XException {
-        Device device = iDeviceService.getById(deviceId);
-        if (device == null) {
-            throw new BizException("Device not exist", "设备不存在");
-        }
-        List<Module> moduleList = iModuleService.list(new QueryWrapper<Module>().eq("device_id", device.getId()));
-        List<Map<String, Object>> moduleDataDefineList = new ArrayList<>();
-        Map<String, Object> data = new HashMap<>();
-        List<Map<String, Object>> featureCmdKeyDefineList = new ArrayList<>();
-
-        for (Module module : moduleList) {
-            Long moduleId = module.getId();
-            List<DataArea> dataAreas = module.getDataAreas();
-            Map<String, Object> moduleMap = new HashMap<>();
-            moduleMap.put("moduleId", moduleId);
-            moduleMap.put("deviceId", deviceId);
-            moduleMap.put("structure", dataAreas);
-            List<Feature> featureList = iFeatureService.list(new QueryWrapper<Feature>().eq("product_id", device.getProductId()));
-            for (Feature feature : featureList) {
-                Map<String, Object> featureMap = new HashMap<>();
-                featureMap.put("featureId", feature.getId());
-                featureMap.put("cmdKey", feature.getCmdKey());
-                featureMap.put("productId", device.getProductId());
-                featureCmdKeyDefineList.add(featureMap);
-            }
-
-            moduleDataDefineList.add(moduleMap);
-        }
-        data.put("modules", moduleDataDefineList);
-        data.put("features", featureCmdKeyDefineList);
-        data.put("parameter", device.getParameters());
-        return data(data);
     }
 }
 

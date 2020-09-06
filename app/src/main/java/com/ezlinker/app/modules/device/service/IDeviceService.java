@@ -1,5 +1,7 @@
 package com.ezlinker.app.modules.device.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ezlinker.app.modules.device.model.Device;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-02-23
  */
 public interface IDeviceService extends IService<Device> {
+    IPage<Device> queryForPage(String sn, String name, String model, String industry, Page page);
 
 }

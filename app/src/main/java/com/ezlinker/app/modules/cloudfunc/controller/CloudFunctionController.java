@@ -33,6 +33,11 @@ public class CloudFunctionController extends CurdController<CloudFunction> {
         super(httpServletRequest);
     }
 
+    @Override
+    protected R create(@RequestBody CloudFunction cloudFunction) throws XException {
+        return super.create(cloudFunction);
+    }
+
     /**
      * 获取详情
      *
@@ -61,10 +66,13 @@ public class CloudFunctionController extends CurdController<CloudFunction> {
      * @throws XException
      */
     @GetMapping
-    protected R queryForPage(@RequestParam Integer current, @RequestParam Integer size, @RequestParam(required = false) String label) throws XException {
+    protected R queryForPage(@RequestParam(required = false, defaultValue = "1") Integer current,
+                             @RequestParam(required = false, defaultValue = "20") Integer size,
+                             @RequestParam(required = false) Boolean enable,
+                             @RequestParam(required = false) String label) {
 
         return data(iCloudFunctionService.page(new Page<>(current, size),
-                new QueryWrapper<CloudFunction>().eq("user_id", getUserDetail().getId())
+                new QueryWrapper<CloudFunction>().eq(enable != null, "enable", enable)
                         .like(label != null, "label", label)));
     }
 

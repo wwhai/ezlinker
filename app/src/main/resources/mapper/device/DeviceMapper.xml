@@ -4,28 +4,56 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.device.model.Device">
-    <result column="id" property="id" />
-    <result column="record_version" property="recordVersion" />
-    <result column="x" property="x" />
-    <result column="create_time" property="createTime" />
-        <result column="project_id" property="projectId" />
-        <result column="product_id" property="productId" />
-        <result column="name" property="name" />
-        <result column="logo" property="logo" />
-        <result column="location" property="location" />
-        <result column="model" property="model" />
-        <result column="industry" property="industry" />
-        <result column="sn" property="sn" />
-        <result column="type" property="type" />
-        <result column="last_active" property="lastActive" />
-        <result column="state" property="state" />
-        <result column="username" property="username" />
+        <result column="id" property="id"/>
+        <result column="record_version" property="recordVersion"/>
+        <result column="x" property="x"/>
+        <result column="create_time" property="createTime"/>
+        <result column="project_id" property="projectId"/>
+        <result column="product_id" property="productId"/>
+        <result column="name" property="name"/>
+        <result column="logo" property="logo"/>
+        <result column="location" property="location"/>
+        <result column="model" property="model"/>
+        <result column="industry" property="industry"/>
+        <result column="sn" property="sn"/>
+        <result column="type" property="type"/>
+        <result column="last_active" property="lastActive"/>
+        <result column="state" property="state"/>
+        <result column="username" property="username"/>
         <result column="client_id" property="clientId"/>
-        <result column="password" property="password" />
-        <result column="is_superuser" property="isSuperuser" />
-        <result column="token" property="token" />
-        <result column="parameters" property="parameters" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler" />
-        <result column="description" property="description" />
+        <result column="password" property="password"/>
+        <result column="is_superuser" property="isSuperuser"/>
+        <result column="token" property="token"/>
+        <result column="parameters" property="parameters"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="description" property="description"/>
     </resultMap>
+
+    <select id="queryForPage" resultType="com.ezlinker.app.modules.device.model.Device">
+        SELECT
+        DETAIL.* ,
+        PROJECT.`name` AS `project`
+        FROM(
+        SELECT
+        DEVICE.*,
+        PRODUCT.`name` AS `product` FROM ez_device AS DEVICE
+        LEFT JOIN ez_product AS PRODUCT ON ( DEVICE.product_id = PRODUCT.id )
+        )
+        AS DETAIL LEFT JOIN ez_project AS PROJECT ON ( DETAIL.project_id = PROJECT.id )
+<!--        <where>-->
+<!--            <if test="sn != null and sn.length >0">-->
+<!--                DETAIL.sn like '#{sn}'-->
+<!--            </if>-->
+<!--            <if test="model != null and model.length >0">-->
+<!--                OR DETAIL.model like '#{model}'-->
+<!--            </if>-->
+<!--            <if test="name != null and name.length >0">-->
+<!--                OR DETAIL.name like '#{name}'-->
+<!--            </if>-->
+<!--            <if test="industry != null and industry.length >0">-->
+<!--                OR DETAIL.industry like '#{industry}'-->
+<!--            </if>-->
+<!--        </where>-->
+    </select>
 
 </mapper>

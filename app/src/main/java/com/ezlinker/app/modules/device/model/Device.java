@@ -115,4 +115,11 @@ public class Device extends XEntity {
      * 描述
      */
     private String description;
+    /**
+     *
+     */
+    @TableField(exist = false)
+    private String project;
+    @TableField(exist = false)
+    private String product;
 }

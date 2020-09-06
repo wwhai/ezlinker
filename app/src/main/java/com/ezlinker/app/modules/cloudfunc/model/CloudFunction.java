@@ -26,6 +26,10 @@ public class CloudFunction extends XEntity {
      */
     private Long cloudAppId;
     /**
+     * token
+     */
+    private String token;
+    /**
      * 创建人
      */
     private Long userId;
