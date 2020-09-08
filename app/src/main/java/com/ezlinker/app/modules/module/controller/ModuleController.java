@@ -1,7 +1,9 @@
 package com.ezlinker.app.modules.module.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ezlinker.app.common.exception.BizException;
 import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
@@ -152,4 +154,20 @@ public class ModuleController extends CurdController<Module> {
         return data(map);
     }
 
+    /**
+     * 获取设备的模块列表
+     *
+     * @param current
+     * @param size
+     * @param deviceId
+     * @return
+     */
+    @GetMapping
+    public R queryForPage(
+            @RequestParam(required = false, defaultValue = "1") Integer current,
+            @RequestParam(required = false, defaultValue = "20") Integer size,
+            @RequestParam(required = false) Long deviceId) {
+        IPage<Module> moduleIPage = iModuleService.page(new Page<>(current, size), new QueryWrapper<Module>().eq(deviceId != null, "device_id", deviceId));
+        return data(moduleIPage);
+    }
 }

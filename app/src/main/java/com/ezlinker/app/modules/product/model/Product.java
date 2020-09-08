@@ -57,7 +57,7 @@ public class Product extends XEntity {
      * 参数
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<FieldParam> parameters;
+    private List<FieldParam> fieldParams;
 
     /**
      * 描述文字

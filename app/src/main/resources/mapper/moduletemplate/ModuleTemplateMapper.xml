@@ -12,9 +12,9 @@
         <result column="name" property="name"/>
         <result column="type" property="type"/>
         <result column="icon" property="icon"/>
-        <result column="data_areas" property="dataAreas"
+        <result column="field_params" property="fieldParams"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
-        <result column="action_config" property="actionConfig"
+        <result column="action" property="action"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
 
         <result column="description" property="description"/>

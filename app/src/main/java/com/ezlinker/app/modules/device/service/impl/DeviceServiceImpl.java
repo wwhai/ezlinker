@@ -27,6 +27,6 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     @Override
     public IPage<Device> queryForPage(String sn, String name, String model, String industry, Page page) {
-        return deviceMapper.queryForPage(sn, name, model, industry, page);
+        return deviceMapper.queryForPage(page, sn, name, model, industry);
     }
 }

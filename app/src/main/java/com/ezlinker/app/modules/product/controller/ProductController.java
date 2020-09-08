@@ -101,7 +101,7 @@ public class ProductController extends XController {
         long count = iDeviceService.count(new QueryWrapper<Device>().eq("product_id", id));
 
         if (count > 0) {
-            if (newProduct.getParameters() != null) {
+            if (newProduct.getFieldParams() != null) {
                 throw new BadRequestException("Forbidden!", "该产品已经存在设备，不可修改数据定义！");
 
             }

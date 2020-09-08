@@ -15,5 +15,5 @@ import com.ezlinker.app.modules.device.model.Device;
  */
 public interface DeviceMapper extends BaseMapper<Device> {
 
-    IPage<Device> queryForPage(String sn, String name, String model, String industry, Page page);
+    IPage<Device> queryForPage(Page<Device> page, String sn, String name, String model, String industry);
 }

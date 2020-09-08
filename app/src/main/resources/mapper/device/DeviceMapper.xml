@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ezlinker.app.modules.device.mapper.DeviceMapper">
 
-    <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.device.model.Device">
         <result column="id" property="id"/>
         <result column="record_version" property="recordVersion"/>
@@ -24,7 +23,7 @@
         <result column="password" property="password"/>
         <result column="is_superuser" property="isSuperuser"/>
         <result column="token" property="token"/>
-        <result column="parameters" property="parameters"
+        <result column="field_params" property="fieldParams"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
         <result column="description" property="description"/>
     </resultMap>
@@ -40,20 +39,20 @@
         LEFT JOIN ez_product AS PRODUCT ON ( DEVICE.product_id = PRODUCT.id )
         )
         AS DETAIL LEFT JOIN ez_project AS PROJECT ON ( DETAIL.project_id = PROJECT.id )
-<!--        <where>-->
-<!--            <if test="sn != null and sn.length >0">-->
-<!--                DETAIL.sn like '#{sn}'-->
-<!--            </if>-->
-<!--            <if test="model != null and model.length >0">-->
-<!--                OR DETAIL.model like '#{model}'-->
-<!--            </if>-->
-<!--            <if test="name != null and name.length >0">-->
-<!--                OR DETAIL.name like '#{name}'-->
-<!--            </if>-->
-<!--            <if test="industry != null and industry.length >0">-->
-<!--                OR DETAIL.industry like '#{industry}'-->
-<!--            </if>-->
-<!--        </where>-->
+       <where>
+           <if test="sn != null and sn.length >0">
+               DETAIL.sn like '#{sn}'
+           </if>
+           <if test="model != null and model.length >0">
+               OR DETAIL.model like '#{model}'
+           </if>
+           <if test="name != null and name.length >0">
+               OR DETAIL.name like '#{name}'
+           </if>
+           <if test="industry != null and industry.length >0">
+               OR DETAIL.industry like '#{industry}'
+           </if>
+       </where>
     </select>
 
 </mapper>

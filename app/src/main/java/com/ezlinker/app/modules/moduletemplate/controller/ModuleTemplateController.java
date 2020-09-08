@@ -12,7 +12,8 @@ import com.ezlinker.app.common.exception.BizException;
 import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
-import com.ezlinker.app.modules.module.pojo.DataArea;
+import com.ezlinker.app.modules.device.pojo.FieldParam;
+import com.ezlinker.app.modules.device.pojo.FieldType;
 import com.ezlinker.app.modules.moduletemplate.model.ModuleTemplate;
 import com.ezlinker.app.modules.moduletemplate.service.IModuleTemplateService;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,61 +56,61 @@ public class ModuleTemplateController extends CurdController<ModuleTemplate> {
     @Transactional(rollbackFor = Exception.class)
     @Override
     protected R add(@RequestBody @Valid ModuleTemplate moduleTemplate) throws BadRequestException {
-        List<DataArea> dataAreas = new ArrayList<>();
+        List<FieldParam> dataAreas = new ArrayList<>();
         if (moduleTemplate.getCount() > 10) {
             throw new BadRequestException("数目最多为10个!", "Count must <=10");
         }
         switch (moduleTemplate.getType()) {
 
             case ModuleTemplate.ModuleType.SWITCH:
-                DataArea dataArea0 = new DataArea();
+                FieldParam dataArea0 = new FieldParam();
                 dataArea0.setField("state");
-                dataArea0.setType(DataArea.BOOLEAN);
+                dataArea0.setFieldType(FieldType.BOOLEAN);
                 dataArea0.setDefaultValue("false");
                 dataArea0.setDescription("开关状态");
                 dataAreas.add(dataArea0);
-                moduleTemplate.setDataAreas(dataAreas);
+                moduleTemplate.setFieldParams(dataAreas);
                 moduleTemplate.setIcon(ModuleTemplate.Icon.SWITCH);
                 iModuleTemplateService.save(moduleTemplate);
                 break;
             case ModuleTemplate.ModuleType.SWITCH_GROUP:
                 Integer count = moduleTemplate.getCount();
                 for (int i = 0; i < count; i++) {
-                    DataArea dataArea1 = new DataArea();
+                    FieldParam dataArea1 = new FieldParam();
                     dataArea1.setField("state" + i);
-                    dataArea1.setType(DataArea.BOOLEAN);
+                    dataArea1.setFieldType(FieldType.BOOLEAN);
                     dataArea1.setDefaultValue("false");
                     dataArea1.setDescription("开关状态");
                     dataAreas.add(dataArea1);
                 }
-                moduleTemplate.setDataAreas(dataAreas);
+                moduleTemplate.setFieldParams(dataAreas);
                 moduleTemplate.setIcon(ModuleTemplate.Icon.SWITCH_GROUP);
 
                 iModuleTemplateService.save(moduleTemplate);
                 break;
             case ModuleTemplate.ModuleType.PROGRESS_BAR:
-                DataArea l = new DataArea();
+                FieldParam l = new FieldParam();
                 l.setField("left");
-                l.setType(DataArea.NUMBER);
+                l.setFieldType(FieldType.NUMBER);
                 l.setDefaultValue("0");
                 l.setDescription("最小值");
 
-                DataArea r = new DataArea();
+                FieldParam r = new FieldParam();
                 r.setField("right");
-                r.setType(DataArea.NUMBER);
+                r.setFieldType(FieldType.NUMBER);
                 r.setDefaultValue("100");
                 r.setDescription("最大值");
 
-                DataArea value = new DataArea();
+                FieldParam value = new FieldParam();
                 value.setField("value");
-                value.setType(DataArea.NUMBER);
+                value.setFieldType(FieldType.NUMBER);
                 value.setDefaultValue("0");
                 value.setDescription("当前值");
 
                 dataAreas.add(l);
                 dataAreas.add(value);
                 dataAreas.add(r);
-                moduleTemplate.setDataAreas(dataAreas);
+                moduleTemplate.setFieldParams(dataAreas);
                 moduleTemplate.setIcon(ModuleTemplate.Icon.PROGRESS_BAR);
 
                 iModuleTemplateService.save(moduleTemplate);
@@ -117,13 +118,13 @@ public class ModuleTemplateController extends CurdController<ModuleTemplate> {
             //按钮只有一个字段
             case ModuleTemplate.ModuleType.BUTTON:
 
-                DataArea buttonArea1 = new DataArea();
+                FieldParam buttonArea1 = new FieldParam();
                 buttonArea1.setField("cmd");
-                buttonArea1.setType(DataArea.NUMBER);
+                buttonArea1.setFieldType(FieldType.NUMBER);
                 buttonArea1.setDefaultValue("0");
                 buttonArea1.setDescription("按钮事件");
                 dataAreas.add(buttonArea1);
-                moduleTemplate.setDataAreas(dataAreas);
+                moduleTemplate.setFieldParams(dataAreas);
                 moduleTemplate.setIcon(ModuleTemplate.Icon.BUTTON);
 
                 iModuleTemplateService.save(moduleTemplate);
@@ -133,26 +134,26 @@ public class ModuleTemplateController extends CurdController<ModuleTemplate> {
 
 
                 for (int i = 0; i < moduleTemplate.getCount(); i++) {
-                    DataArea temp = new DataArea();
+                    FieldParam temp = new FieldParam();
                     temp.setField("cmd");
-                    temp.setType(DataArea.NUMBER);
+                    temp.setFieldType(FieldType.NUMBER);
                     temp.setDefaultValue("0");
                     temp.setDescription("按钮事件");
                     dataAreas.add(temp);
                 }
-                moduleTemplate.setDataAreas(dataAreas);
+                moduleTemplate.setFieldParams(dataAreas);
                 moduleTemplate.setIcon(ModuleTemplate.Icon.BUTTON_GROUP);
 
                 iModuleTemplateService.save(moduleTemplate);
                 break;
             // 数据体类型
             case ModuleTemplate.ModuleType.DATA_ENTITY:
-                if (moduleTemplate.getDataAreas() == null || moduleTemplate.getDataAreas().size() < 1) {
+                if (moduleTemplate.getFieldParams() == null || moduleTemplate.getFieldParams().size() < 1) {
                     throw new BadRequestException("数据体最少包含一个字段", "Chart must have lest one field");
                 }
                 // 挨个检查字段合法
-                for (int i = 0; i < moduleTemplate.getDataAreas().size(); i++) {
-                    checkDataAreaFormat(moduleTemplate.getDataAreas().get(i));
+                for (int i = 0; i < moduleTemplate.getFieldParams().size(); i++) {
+                    checkFieldParamFormat(moduleTemplate.getFieldParams().get(i));
                 }
                 moduleTemplate.setIcon(ModuleTemplate.Icon.DATA_ENTITY);
                 iModuleTemplateService.save(moduleTemplate);
@@ -161,7 +162,7 @@ public class ModuleTemplateController extends CurdController<ModuleTemplate> {
             // 需要单独建表来保存，一般和三方服务关联
             // 在生产设备的时候需要执行这个步骤，设计的时候不用
             case ModuleTemplate.ModuleType.STREAM:
-                moduleTemplate.setDataAreas(null);
+                moduleTemplate.setFieldParams(null);
                 moduleTemplate.setIcon(ModuleTemplate.Icon.STREAM);
                 iModuleTemplateService.save(moduleTemplate);
                 break;
@@ -192,27 +193,27 @@ public class ModuleTemplateController extends CurdController<ModuleTemplate> {
      *
      * @throws BadRequestException
      */
-    private void checkDataAreaFormat(DataArea dataArea) throws BadRequestException {
+    private void checkFieldParamFormat(FieldParam dataArea) throws BadRequestException {
 
         String defaultValue = dataArea.getDefaultValue();
-        Integer type = dataArea.getType();
-        if (type == DataArea.NUMBER) {
+        FieldType type = dataArea.getFieldType();
+        if (type == FieldType.NUMBER) {
 
             checkIsNumber(defaultValue);
 
-        } else if (type == DataArea.STRING) {
+        } else if (type == FieldType.TEXT) {
             if (defaultValue.length() > 256) {
                 throw new BadRequestException("默认值长度不可超过256个字符", "Default string value length must less than 256 chars");
 
             }
 
-        } else if (type == DataArea.BOOLEAN) {
+        } else if (type == FieldType.BOOLEAN) {
             if ((!defaultValue.equalsIgnoreCase("boolean")) || (!dataArea.getDefaultValue().equalsIgnoreCase("false"))) {
                 throw new BadRequestException("默认值必须为true或者false", "Default value must be 'true' or 'false'");
 
             }
 
-        } else if (type == DataArea.JSON) {
+        } else if (type == FieldType.JSON) {
             try {
                 JSONArray.parse(dataArea.getDefaultValue());
             } catch (Exception e) {

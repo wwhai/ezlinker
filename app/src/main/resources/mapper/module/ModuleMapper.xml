@@ -12,7 +12,7 @@
         <result column="model" property="model"/>
         <result column="token" property="token"/>
         <result column="device_id" property="deviceId"/>
-        <result column="data_areas" property="dataAreas"
+        <result column="field_params" property="fieldParams"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
         <result column="icon" property="icon"/>
         <result column="description" property="description"/>

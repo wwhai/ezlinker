@@ -10,10 +10,10 @@ import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
 import com.ezlinker.app.modules.device.model.Device;
+import com.ezlinker.app.modules.device.pojo.FieldParam;
 import com.ezlinker.app.modules.device.service.IDeviceService;
 import com.ezlinker.app.modules.module.model.Module;
 import com.ezlinker.app.modules.module.model.StreamIntegration;
-import com.ezlinker.app.modules.module.pojo.DataArea;
 import com.ezlinker.app.modules.module.service.IModuleService;
 import com.ezlinker.app.modules.module.service.IStreamIntegrationService;
 import com.ezlinker.app.modules.moduletemplate.model.ModuleTemplate;
@@ -127,8 +127,8 @@ public class DeviceController extends CurdController<Device> {
         queryWrapper.like((industry != null) && industry.length() > 0, "industry", industry);
         queryWrapper.orderByDesc("create_time");
         // TODO 重新设计Page接口，使其可以返回项目和产品的名称
-        // IPage<Device> devicePage = iDeviceService.queryForPage(sn, name, model, industry, new Page<>(current, size));
-        IPage<Device> devicePage = iDeviceService.page(new Page<>(current, size), queryWrapper);
+        IPage<Device> devicePage = iDeviceService.queryForPage(sn, name, model, industry, new Page<>(current, size));
+        // IPage<Device> devicePage = iDeviceService.page(new Page<>(current, size), queryWrapper);
         return data(devicePage);
     }
 
@@ -156,7 +156,7 @@ public class DeviceController extends CurdController<Device> {
         String username = SecureUtil.md5(IDKeyUtil.generateId().toString());
         String clientId = SecureUtil.md5(username);
         String password = SecureUtil.md5(clientId);
-        form.setParameters(product.getParameters())
+        form.setFieldParams(product.getFieldParams())
                 .setUsername(username)
                 .setPassword(password)
                 .setClientId(clientId)
@@ -179,16 +179,17 @@ public class DeviceController extends CurdController<Device> {
         for (ModuleTemplate moduleTemplate : moduleTemplates) {
             Module newModule = new Module();
             newModule.setName(moduleTemplate.getName())
-                    .setDataAreas(moduleTemplate.getDataAreas())
+                    .setFieldParams(moduleTemplate.getFieldParams())
                     .setDeviceId(form.getId());
             // 对象转换
             ObjectMapper objectMapper = new ObjectMapper();
-            List<DataArea> dataAreasList = objectMapper.convertValue(moduleTemplate.getDataAreas(), new TypeReference<List<DataArea>>() {
-            });
+            List<FieldParam> dataAreasList = objectMapper.convertValue(moduleTemplate.getFieldParams(),
+                    new TypeReference<List<FieldParam>>() {
+                    });
 
             // 构建Token
             StringBuilder stringBuilder = new StringBuilder("[");
-            for (DataArea area : dataAreasList) {
+            for (FieldParam area : dataAreasList) {
                 stringBuilder.append(area.getField()).append(",");
             }
             stringBuilder.replace(stringBuilder.length() - 1, stringBuilder.length(), "").append("]");

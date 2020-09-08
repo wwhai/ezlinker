@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.ezlinker.app.common.model.XEntity;
-import com.ezlinker.app.modules.module.pojo.DataArea;
+import com.ezlinker.app.modules.device.pojo.FieldParam;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -51,7 +51,7 @@ public class Module extends XEntity {
      * 数据域
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<DataArea> dataAreas;
+    private List<FieldParam> fieldParams;
 
     /**
      * 描述

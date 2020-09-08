@@ -12,7 +12,7 @@
         <result column="name" property="name"/>
         <result column="logo" property="logo"/>
         <result column="type" property="type"/>
-        <result column="parameters" property="parameters"
+        <result column="field_params" property="fieldParams"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
         <result column="layout" property="layout"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
