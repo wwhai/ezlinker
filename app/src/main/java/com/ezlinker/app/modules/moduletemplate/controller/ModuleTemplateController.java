@@ -151,10 +151,6 @@ public class ModuleTemplateController extends CurdController<ModuleTemplate> {
                 if (moduleTemplate.getFieldParams() == null || moduleTemplate.getFieldParams().size() < 1) {
                     throw new BadRequestException("数据体最少包含一个字段", "Chart must have lest one field");
                 }
-                // 挨个检查字段合法
-                for (int i = 0; i < moduleTemplate.getFieldParams().size(); i++) {
-                    checkFieldParamFormat(moduleTemplate.getFieldParams().get(i));
-                }
                 moduleTemplate.setIcon(ModuleTemplate.Icon.DATA_ENTITY);
                 iModuleTemplateService.save(moduleTemplate);
                 break;
@@ -188,44 +184,6 @@ public class ModuleTemplateController extends CurdController<ModuleTemplate> {
         }
     }
 
-    /**
-     * 检查表结构合法性
-     *
-     * @throws BadRequestException
-     */
-    private void checkFieldParamFormat(FieldParam dataArea) throws BadRequestException {
-
-        String defaultValue = dataArea.getDefaultValue();
-        FieldType type = dataArea.getFieldType();
-        if (type == FieldType.NUMBER) {
-
-            checkIsNumber(defaultValue);
-
-        } else if (type == FieldType.TEXT) {
-            if (defaultValue.length() > 256) {
-                throw new BadRequestException("默认值长度不可超过256个字符", "Default string value length must less than 256 chars");
-
-            }
-
-        } else if (type == FieldType.BOOLEAN) {
-            if ((!defaultValue.equalsIgnoreCase("boolean")) || (!dataArea.getDefaultValue().equalsIgnoreCase("false"))) {
-                throw new BadRequestException("默认值必须为true或者false", "Default value must be 'true' or 'false'");
-
-            }
-
-        } else if (type == FieldType.JSON) {
-            try {
-                JSONArray.parse(dataArea.getDefaultValue());
-            } catch (Exception e) {
-                throw new BadRequestException("默认值必须为JSON数组格式", "Default value must be json array");
-
-            }
-        } else {
-            throw new BadRequestException("不支持的字段类型", "Field format unsupported");
-
-        }
-
-    }
 
     /**
      * 更新

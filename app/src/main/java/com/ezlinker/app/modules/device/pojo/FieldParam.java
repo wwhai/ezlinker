@@ -1,5 +1,6 @@
 package com.ezlinker.app.modules.device.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -42,7 +43,11 @@ public class FieldParam {
     /**
      * 字段的默认值,默认为 :空
      */
-    private String defaultValue;
+    private Object defaultValue;
+    /**
+     * 运行状态
+     */
+    private Object value = "NULL";
     /**
      * 备注
      */

@@ -22,7 +22,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("ez_module")
+@TableName(value = "ez_module", autoResultMap = true)
 public class Module extends XEntity {
 
     private static final long serialVersionUID = 1L;
