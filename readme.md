@@ -3,17 +3,7 @@
 [![Banner](resources/static/banner.gif)](resources/static/banner.gif)
 ## 基本界面展示
 
-[![Banner](resources/static/7.png)](resources/static/7.png)
---
-[![Banner](resources/static/2.png)](resources/static/2.png)
---
-[![Banner](resources/static/3.png)](resources/static/3.png)
---
-[![Banner](resources/static/4.png)](resources/static/4.png)
---
-[![Banner](resources/static/5.png)](resources/static/5.png)
---
-[![Banner](resources/static/6.png)](resources/static/6.png)
+[![Banner](resources/static/7.png)](resources/static/1.png)
 --
 
 ## 当前进度
