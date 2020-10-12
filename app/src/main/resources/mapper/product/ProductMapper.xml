@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ezlinker.app.modules.product.mapper.ProductMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.product.model.Product">
         <result column="id" property="id"/>
@@ -11,31 +10,18 @@
         <result column="project_id" property="projectId"/>
         <result column="name" property="name"/>
         <result column="logo" property="logo"/>
-        <result column="type" property="type"/>
         <result column="field_params" property="fieldParams"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
-        <result column="layout" property="layout"
-                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
-        <result column="description" property="description"/>
-        <result column="protocol" property="protocol"/>
 
+        <result column="description" property="description"/>
     </resultMap>
-    <select id="getDetail" resultType="com.ezlinker.app.modules.product.model.Product">
-             SELECT
-             	PRODUCT_DATA.*,
-             	COUNTINFO.deviceCount
-             FROM
-             	ez_product PRODUCT_DATA
-             	RIGHT JOIN (
-             	SELECT
-             		PRODUCT.id,
-             		COUNT( 1 ) deviceCount
-             	FROM
-             		ez_product PRODUCT
-             		RIGHT JOIN ez_device DEVICE ON ( PRODUCT.id = DEVICE.product_id )
-             	WHERE
-             	PRODUCT.id = #{id}
-             	) COUNTINFO ON ( PRODUCT_DATA.id = COUNTINFO.id );
+    <select id="details" resultMap="BaseResultMap" resultType="com.ezlinker.app.modules.product.model.Product">
+        SELECT A.*,
+               COUNT(B.id) AS `device_count`
+        FROM ez_product A
+                 LEFT JOIN ez_device B ON (A.id = B.product_id)
+        WHERE A.id = #{productId}
+
     </select>
 
 </mapper>

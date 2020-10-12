@@ -49,6 +49,7 @@ public class Module extends XEntity {
 
     /**
      * 数据域
+     * Size:最多不能超过20个属性
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
     private List<FieldParam> fieldParams;

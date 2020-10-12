@@ -4,6 +4,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Random;
 
 /**
  * @author wangwenhai
@@ -55,4 +56,20 @@ public class HelpfulUtil {
         }
     }
 
+    /**
+     * 获取一个随机字符串
+     *
+     * @param length 长度
+     * @return
+     */
+    public static String getRandomString(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(str.length());
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
+    }
 }

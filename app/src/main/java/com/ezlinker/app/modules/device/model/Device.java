@@ -67,12 +67,9 @@ public class Device extends XEntity {
      * 序列号
      */
     private String sn;
-
     /**
-     * 类型
+     *
      */
-    private String type;
-
     private Date lastActive;
 
     /**
@@ -122,4 +119,6 @@ public class Device extends XEntity {
     private String project;
     @TableField(exist = false)
     private String product;
+
+
 }

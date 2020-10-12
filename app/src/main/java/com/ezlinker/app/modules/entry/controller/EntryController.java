@@ -9,6 +9,7 @@ import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.exchange.RCode;
 import com.ezlinker.app.common.utils.RedisUtil;
+import com.ezlinker.app.modules.constant.RedisKeyPrefix;
 import com.ezlinker.app.modules.entry.form.UserLoginForm;
 import com.ezlinker.app.modules.user.model.User;
 import com.ezlinker.app.modules.user.model.UserDetail;
@@ -86,7 +87,8 @@ public class EntryController {
         userDetail.setExpiredTime(UserTokenUtil.expiredTime);
 
         String token = UserTokenUtil.token(userDetail, UserTokenUtil.expiredTime);
-        redisUti.set(user.getId().toString(), token, UserTokenUtil.expiredTime);
+        // 用户的Token保存在Redis
+        redisUti.set(RedisKeyPrefix.EZLINKER_USER_TOKEN + user.getId(), token, UserTokenUtil.expiredTime);
         UserLoginLog userLoginLog = new UserLoginLog();
         userLoginLog.setCreateTime(new Date());
         userLoginLog.setUsername(user.getUsername()).setIp(ip).setStatus("INFO").setUserId(user.getId()).setRemark("登陆成功").setLocation(HelpfulUtil.getLocationWithIp(ip));

@@ -31,6 +31,7 @@ public class ModuleDataService {
 
     public IPage<ModuleData> queryForPage(Long moduleId, Pageable pageable) {
         Query query = new Query();
+        long total = mongoTemplate.count(query, "module_data");
         Criteria criteria = Criteria.where("moduleId").is(moduleId);
         query.fields().include("createTime").include("data");
         query.addCriteria(criteria);
@@ -39,7 +40,7 @@ public class ModuleDataService {
         query.with(pageable);
 
         List<ModuleData> list = mongoTemplate.find(query, ModuleData.class, "module_data");
-        long total = mongoTemplate.count(query, "module_data");
+
 
         return new XPage<>(list, total, OrderItem.descs("_id"), pageable);
     }

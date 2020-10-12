@@ -1,7 +1,6 @@
 package com.ezlinker.app.interceptor;
 
 import com.ezlinker.app.common.exception.XException;
-import com.ezlinker.app.utils.HelpfulUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,7 +19,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        logger.info(request.getServletPath() + " Method:" + request.getMethod() + " ->:" + HelpfulUtil.getIpAddress(request));
+        logger.info("[HTTP 日志拦截器] ========>" + request.getServletPath() + " Method:" + request.getMethod());
 
         if (!hasToken(request)) {
             throw new XException(401, "Require token", "Token缺失");

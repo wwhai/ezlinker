@@ -68,6 +68,9 @@ public class OSMonitor {
         data.put("jvmFree", vmFree);
         data.put("jvmTotal", vmTotal);
         data.put("jvmMax", vmMax);
+        data.put("physicalFree", physicalFree);
+        data.put("physicalTotal", physicalTotal);
+
         return data;
 
     }
@@ -82,8 +85,10 @@ public class OSMonitor {
 
     public static Map<String, Object> getNetworkState() {
         Map<String, Object> result = new HashMap<>();
+        result.put("netUsage", 0);
+        result.put("currentRate", 0);
         float TotalBandwidth = 1000;
-        float netUsage = 0.0f;
+        float netUsage;
         Process pro1, pro2;
         Runtime r = Runtime.getRuntime();
         try {
@@ -92,7 +97,7 @@ public class OSMonitor {
             long startTime = System.currentTimeMillis();
             pro1 = r.exec(command);
             BufferedReader in1 = new BufferedReader(new InputStreamReader(pro1.getInputStream()));
-            String line = null;
+            String line;
             long inSize1 = 0, outSize1 = 0;
             while ((line = in1.readLine()) != null) {
                 line = line.trim();
@@ -109,8 +114,6 @@ public class OSMonitor {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                result.put("netUsage", 0);
-                result.put("currentRate", 0);
                 return result;
             }
             //第二次采集流量数据
@@ -136,14 +139,11 @@ public class OSMonitor {
                 netUsage = currentRate / TotalBandwidth;
                 result.put("netUsage", netUsage);
                 result.put("currentRate", currentRate);
-
             }
             in2.close();
             pro2.destroy();
             return result;
         } catch (IOException e) {
-            result.put("netUsage", 0);
-            result.put("currentRate", 0);
             return result;
         }
     }

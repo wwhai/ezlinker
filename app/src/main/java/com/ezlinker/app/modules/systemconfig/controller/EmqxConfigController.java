@@ -45,18 +45,16 @@ public class EmqxConfigController extends CurdController<EmqxConfig> {
     @Override
     @GetMapping(value = "/{id}")
     protected R get(@PathVariable Long id) throws XException {
-        EmqxConfig emqxConfig = iEmqxConfigService.getById(id);
-        if (emqxConfig == null) {
+        EmqxConfig config = iEmqxConfigService.getById(id);
+        if (config == null) {
             throw new BizException("节点不存在,请配置节点", "Node not exists,please configure node");
         }
         try {
-            JSONObject data = EMQMonitorV4.getBrokersInfo(emqxConfig);
+            JSONObject data = EMQMonitorV4.getBrokersInfo(config.getIp(), config.getApiPort(), config.getNodeName(), config.getAppId(), config.getSecret());
+            ;
             // 如果是离线 就更新为在线
             if (data != null) {
-                if (emqxConfig.getState() == EmqxConfig.OFFLINE) {
-                    emqxConfig.setState(EmqxConfig.ONLINE);
-                    iEmqxConfigService.updateById(emqxConfig);
-                }
+
                 return data(data);
             } else {
                 throw new BizException("节点信息获取失败,请检查节点", "Node not connect,please check node");
@@ -64,11 +62,7 @@ public class EmqxConfigController extends CurdController<EmqxConfig> {
             }
 
         } catch (Exception e) {
-            //如果是在线 就更新为离线
-            if (emqxConfig.getState() == EmqxConfig.ONLINE) {
-                emqxConfig.setState(EmqxConfig.OFFLINE);
-                iEmqxConfigService.updateById(emqxConfig);
-            }
+
             throw new BizException("节点信息获取失败,请检查节点", "Node not connect,please check node");
 
         }

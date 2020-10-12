@@ -63,8 +63,10 @@ public class ProductController extends XController {
      */
 
     @PostMapping
-    protected R add(@RequestBody @Valid Product product) {
-
+    protected R add(@RequestBody @Valid Product product) throws BizException {
+        if (product.getFieldParams().size() > 20) {
+            throw new BizException("The fields must less than 20!", "属性最多不能超过20个");
+        }
         boolean ok = iProductService.save(product);
         return ok ? data(product) : fail();
 
@@ -116,19 +118,15 @@ public class ProductController extends XController {
     /**
      * 查看产品详情
      *
-     * @param id 产品ID:必传
+     * @param productId 产品ID:必传
      * @return
      */
 
 
-    @GetMapping("/{id}")
-    public R get(@PathVariable Long id) throws XException {
-        Product product = iProductService.getDetail(id);
-        if (product == null) {
-            throw new BizException("Product not exists!", "产品不存在");
-        }
-
-        return data(product);
+    @GetMapping("/{productId}")
+    public R get(@PathVariable Long productId) {
+        Product data = iProductService.details(productId);
+        return data(data);
     }
 
     /**

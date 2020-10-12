@@ -40,6 +40,7 @@ public class ModuleTemplate extends XEntity {
 
     /**
      * 数据域
+     * Size:最多不能超过20个属性
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
     private List<FieldParam> fieldParams;
@@ -121,8 +122,8 @@ public class ModuleTemplate extends XEntity {
      * }
      * ]
      */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<Action> action;
+//    @TableField(typeHandler = JacksonTypeHandler.class)
+//    private List<Action> action;
 
     public static class Action {
         // 对应 trigger

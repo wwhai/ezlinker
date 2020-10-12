@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ezlinker.app.modules.device.model.Device;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -15,5 +16,29 @@ import com.ezlinker.app.modules.device.model.Device;
  */
 public interface DeviceMapper extends BaseMapper<Device> {
 
-    IPage<Device> queryForPage(Page<Device> page, String sn, String name, String model, String industry);
+    /**
+     * @param page
+     * @param sn
+     * @param name
+     * @param projectId
+     * @param productId
+     * @param model
+     * @param industry
+     * @return
+     */
+    IPage<Device> queryForPage(Page<Device> page,
+                               @Param("sn") String sn,
+                               @Param("name") String name,
+                               @Param("projectId") Long projectId,
+                               @Param("productId") Long productId,
+                               @Param("model") String model,
+                               @Param("industry") String industry);
+
+
+    /**
+     * @param clientId
+     * @return
+     */
+    String getFieldParams(@Param("clientId") String clientId);
+
 }

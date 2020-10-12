@@ -1,9 +1,8 @@
 package com.ezlinker.app.modules.product.model;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.baomidou.mybatisplus.extension.handlers.GsonTypeHandler;
 import com.ezlinker.app.common.model.XEntity;
 import com.ezlinker.app.modules.device.pojo.FieldParam;
 import lombok.Data;
@@ -39,24 +38,17 @@ public class Product extends XEntity {
      * 产品名称
      */
     @NotEmpty(message = "名称不能为空")
-
     private String name;
-    /**
-     * 类型
-     */
-    private String type;
-
     /**
      * 产品logo
      */
 
     private String logo;
 
-
     /**
      * 参数
      */
-    @TableField(typeHandler = JacksonTypeHandler.class)
+    @TableField(typeHandler = GsonTypeHandler.class)
     private List<FieldParam> fieldParams;
 
     /**
@@ -76,13 +68,6 @@ public class Product extends XEntity {
     public static final int MQTT = 1;
     public static final int HTTP = 2;
     public static final int COAP = 3;
-    /**
-     * 布局描述
-     */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private JSONObject layout;
-    @NotNull(message = "协议类型不能为空值")
-    private Integer protocol;
 
     /**
      * 2020-8-20: 生产的设备数量

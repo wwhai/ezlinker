@@ -6,5 +6,14 @@ package com.ezlinker.app.modules.device.pojo;
  * File description:
  */
 public enum FieldType {
-    NUMBER, BOOLEAN, TEXT,JSON, STREAM, FILE
+    // 数字
+    NUMBER,
+    // 布尔
+    BOOLEAN,
+    // 文本
+    TEXT,
+    // 流
+    STREAM,
+    // 2020年10月12日新增:地理坐标
+    GEO
 }

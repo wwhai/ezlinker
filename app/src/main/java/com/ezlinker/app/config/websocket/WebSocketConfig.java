@@ -1,16 +1,9 @@
 package com.ezlinker.app.config.websocket;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.socket.*;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-
-import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
  * @author wangwenhai
@@ -18,47 +11,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * File description: Websocket config
  */
 @Configuration
-@EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer {
-    // Session<==>requestId
-    private static final ConcurrentHashMap<WebSocketSession, String> SESSION_MAP = new ConcurrentHashMap<>();
-    @Resource
-    MongoTemplate mongoTemplate;
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    //@Scheduled(cron = "")
-    public void pushData(){
-
-    }
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-        webSocketHandlerRegistry.addHandler(new WebSocketHandler() {
-            @Override
-            public void afterConnectionEstablished(WebSocketSession webSocketSession) throws IOException {
-                SESSION_MAP.put(webSocketSession, webSocketSession.getId());
-                if (webSocketSession.isOpen()) {
-                    webSocketSession.sendMessage(new TextMessage("ok"));
-                }
-            }
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // var socket = new SockJS('/ws');
+        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
+    }
 
-            @Override
-            public void handleMessage(WebSocketSession webSocketSession, WebSocketMessage<?> webSocketMessage) {
-
-            }
-
-            @Override
-            public void handleTransportError(WebSocketSession webSocketSession, Throwable throwable) {
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) {
-                SESSION_MAP.remove(webSocketSession);
-            }
-
-            @Override
-            public boolean supportsPartialMessages() {
-                return false;
-            }
-        }, "/ws");
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        // 类似于注册全局Topic，供给Javascript来subscribe
+        // stompClient.subscribe('/system', function () {});
+        // stompClient.subscribe('/device', function () {});
+        // stompClient.subscribe('/module', function () {});
+        registry.enableSimpleBroker("/s2system", "/s2device", "/s2module");
     }
 }

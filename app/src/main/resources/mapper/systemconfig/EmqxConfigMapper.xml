@@ -12,7 +12,8 @@
         <result column="app_id" property="appId"/>
         <result column="secret" property="secret"/>
         <result column="node_name" property="nodeName"/>
-        <result column="port" property="port"/>
+        <result column="api_port" property="apiPort"/>
+        <result column="mqtt_port" property="mqttPort"/>
         <result column="description" property="description"/>
     </resultMap>
 

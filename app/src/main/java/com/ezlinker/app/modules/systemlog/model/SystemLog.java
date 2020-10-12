@@ -9,15 +9,15 @@ import java.time.LocalDateTime;
  */
 @Data
 public class SystemLog {
-    private int type = 0;
+    private SystemLogType type = SystemLogType.NORMAL;
     private String who;
     private String operation;
     private String message;
     private LocalDateTime createTime;
 
-    public interface SystemLogType {
-        int normal = 0;
-        int warn = 1;
-        int error = 2;
+    public enum SystemLogType {
+        NORMAL,
+        WARN,
+        ERROR;
     }
 }

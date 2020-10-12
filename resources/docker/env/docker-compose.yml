@@ -1,0 +1,138 @@
+version: '3.1'
+# Network
+networks:
+  ezlinker_net:
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+    driver: bridge
+# Services
+services:
+  mysql:
+    image: mysql
+    container_name: "ezlinker_mysql"
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_USER: 'root'
+      MYSQL_PASS: 'root'
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d/
+      - ~/docker/ezlinker/mysql8/data:/var/lib/mysql
+      - ~/docker/ezlinker/mysql8/log:/var/log/mysql
+      - ~/docker/ezlinker/mysql8/mysql-files:/var/lib/mysql-files
+    restart: always
+    ports:
+      - 53306:3306
+      - 53060:33060
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+      --max_allowed_packet=128M
+    networks:
+      ezlinker_net:
+        aliases:
+          - ezlinker.mysql.io
+  mongo:
+    image: mongo
+    container_name: ezlinker_mongo
+    ports:
+      - "57017:27017"
+    restart: always
+    command:
+      --bind_ip 0.0.0.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    networks:
+      ezlinker_net:
+        aliases:
+          - ezlinker.mongo.io
+  redis:
+    image: redis
+    container_name: ezlinker_redis
+    command: redis-server --requirepass ezlinker_redis --appendonly yes
+    ports:
+      - "56379:6379"
+    volumes:
+      - ~/docker/ezlinker/redis/data:/data
+    restart: always
+    networks:
+      ezlinker_net:
+        aliases:
+          - ezlinker.redis.io
+  # Emqx
+  emqx1:
+    container_name: ezlinker_emqx1
+    image: emqx/emqx
+    restart: always
+    ports:
+      - 1801:1883
+      - 18001:18083
+      - 18081:8080
+      - 18881:8081
+    environment:
+      - "EMQX_NAME=emqx"
+      - "EMQX_HOST=node1.emqx.io"
+      - "EMQX_ALLOW_ANONYMOUS=false"
+      - "EMQX_NODE__COOKIE=emqxsecretcookie"
+      - "EMQX_ENABLE_ACL_CACHE=off"
+      - "EMQX_ACL_NOMATCH=deny"
+      - "EMQX_CLUSTER__DISCOVERY=static"
+      - "EMQX_CLUSTER__STATIC__SEEDS=emqx@node1.emqx.io, emqx@node2.emqx.io"
+      - "EMQX_LOADED_PLUGINS=emqx_recon,emqx_retainer,emqx_management,emqx_dashboard,emqx_auth_mysql,emqx_web_hook"
+      - "EMQX_AUTH__MYSQL__SERVER=106.75.57.171:53306"
+      - "EMQX_AUTH__MYSQL__USERNAME=root"
+      - "EMQX_AUTH__MYSQL__PASSWORD=root"
+      - "EMQX_AUTH__MYSQL__DATABASE=ezlinker"
+      - "EMQX_AUTH__MYSQL__AUTH_QUERY=SELECT DEVICE.`password` FROM `ez_device` AS DEVICE WHERE DEVICE.`client_id` = '%c' LIMIT 1"
+      - "EMQX_AUTH__MYSQL__SUPER_QUERY=SELECT DEVICE.`is_superuser` FROM `ez_device` AS DEVICE WHERE DEVICE.`client_id` = '%c' LIMIT 1"
+      - "EMQX_AUTH__MYSQL__ACL_QUERY=SELECT allow,ip AS ipaddr, username, client_id AS clientid, access, topic FROM ez_mqtt_topic WHERE client_id = '%c' ORDER BY id DESC"
+      - "EMQX_AUTH__MYSQL__PASSWORD_HASH=plain"
+      - "EMQX_WEB__HOOK__API__URL=http://127.0.0.1:2500/ezlinker/deviceAdvisory/onOffLine"
+      - "EMQX_WEB__HOOK__HEADERS__TOKEN=ezlinker"
+      - "EMQX_WEB__HOOK__RULE__CLIENT__CONNECTED__1={\"action\": \"on_client_connected\"}"
+      - "EMQX_WEB__HOOK__RULE__CLIENT__DISCONNECTED__1={\"action\": \"on_client_disconnected\"}"
+    networks:
+      ezlinker_net:
+        aliases:
+          - node1.emqx.io
+
+  emqx2:
+    container_name: ezlinker_emqx2
+    image: emqx/emqx
+    restart: always
+    ports:
+      - 1802:1883
+      - 18002:18083
+      - 18082:8080
+      - 18882:8081
+    environment:
+      - "EMQX_NAME=emqx"
+      - "EMQX_HOST=node2.emqx.io"
+      - "EMQX_ALLOW_ANONYMOUS=false"
+      - "EMQX_ENABLE_ACL_CACHE=off"
+      - "EMQX_ACL_NOMATCH=deny"
+      - "EMQX_NODE__COOKIE=emqxsecretcookie"
+      - "EMQX_CLUSTER__DISCOVERY=static"
+      - "EMQX_CLUSTER__STATIC__SEEDS=emqx@node1.emqx.io, emqx@node2.emqx.io"
+      - "EMQX_LOADED_PLUGINS=emqx_recon,emqx_retainer,emqx_management,emqx_dashboard,emqx_auth_mysql,emqx_web_hook"
+      - "EMQX_AUTH__MYSQL__SERVER=106.75.57.171:53306"
+      - "EMQX_AUTH__MYSQL__USERNAME=root"
+      - "EMQX_AUTH__MYSQL__PASSWORD=root"
+      - "EMQX_AUTH__MYSQL__DATABASE=ezlinker"
+      - "EMQX_AUTH__MYSQL__AUTH_QUERY=SELECT DEVICE.`password` FROM `ez_device` AS DEVICE WHERE DEVICE.`client_id` = '%c' LIMIT 1"
+      - "EMQX_AUTH__MYSQL__SUPER_QUERY=SELECT DEVICE.`is_superuser` FROM `ez_device` AS DEVICE WHERE DEVICE.`client_id` = '%c' LIMIT 1"
+      - "EMQX_AUTH__MYSQL__ACL_QUERY=SELECT allow,ip AS ipaddr, username, client_id AS clientid, access, topic FROM ez_mqtt_topic WHERE client_id = '%c' ORDER BY id DESC"
+      - "EMQX_AUTH__MYSQL__PASSWORD_HASH=plain"
+      - "EMQX_WEB__HOOK__API__URL=http://127.0.0.1:2500/ezlinker/deviceAdvisory/onOffLine"
+      - "EMQX_WEB__HOOK__HEADERS__TOKEN=ezlinker"
+      - "EMQX_WEB__HOOK__RULE__CLIENT__CONNECTED__1={\"action\": \"on_client_connected\"}"
+      - "EMQX_WEB__HOOK__RULE__CLIENT__DISCONNECTED__1={\"action\": \"on_client_disconnected\"}"
+    networks:
+      ezlinker_net:
+        aliases:
+          - node2.emqx.io

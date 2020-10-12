@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ezlinker.app.modules.device.mapper.DeviceMapper">
-
     <resultMap id="BaseResultMap" type="com.ezlinker.app.modules.device.model.Device">
         <result column="id" property="id"/>
         <result column="record_version" property="recordVersion"/>
@@ -15,7 +14,6 @@
         <result column="model" property="model"/>
         <result column="industry" property="industry"/>
         <result column="sn" property="sn"/>
-        <result column="type" property="type"/>
         <result column="last_active" property="lastActive"/>
         <result column="state" property="state"/>
         <result column="username" property="username"/>
@@ -27,8 +25,7 @@
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
         <result column="description" property="description"/>
     </resultMap>
-
-    <select id="queryForPage" resultType="com.ezlinker.app.modules.device.model.Device">
+    <select id="queryForPage" resultMap="BaseResultMap" resultType="com.ezlinker.app.modules.device.model.Device">
         SELECT
         DETAIL.* ,
         PROJECT.`name` AS `project`
@@ -39,20 +36,33 @@
         LEFT JOIN ez_product AS PRODUCT ON ( DEVICE.product_id = PRODUCT.id )
         )
         AS DETAIL LEFT JOIN ez_project AS PROJECT ON ( DETAIL.project_id = PROJECT.id )
-       <where>
-           <if test="sn != null and sn.length >0">
-               DETAIL.sn like '#{sn}'
-           </if>
-           <if test="model != null and model.length >0">
-               OR DETAIL.model like '#{model}'
-           </if>
-           <if test="name != null and name.length >0">
-               OR DETAIL.name like '#{name}'
-           </if>
-           <if test="industry != null and industry.length >0">
-               OR DETAIL.industry like '#{industry}'
-           </if>
-       </where>
+        <where>
+            <if test='sn != null and sn.length >0'>
+                DETAIL.sn = #{sn}
+            </if>
+            <if test='model != null and model.length >0'>
+                AND DETAIL.model like CONCAT('%',#{model},'%')
+            </if>
+            <if test='name != null and name.length >0'>
+                AND DETAIL.name like CONCAT('%',#{name},'%')
+            </if>
+            <if test='industry != null and industry.length >0'>
+                AND DETAIL.industry CONCAT('%',#{industry},'%')
+            </if>
+
+            <if test='projectId != null'>
+                AND DETAIL.project_id = #{projectId}
+            </if>
+
+            <if test='productId != null'>
+                AND DETAIL.product_id = #{productId}
+            </if>
+            AND DETAIL.project_id > 0
+        </where>
     </select>
 
+
+    <select id="getFieldParams" resultType="java.lang.String">
+                select field_params from ez_device where client_id = #{clientId}
+    </select>
 </mapper>

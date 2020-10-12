@@ -8,8 +8,6 @@ import com.ezlinker.app.common.exception.BizException;
 import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
-import com.ezlinker.app.modules.dataentry.model.DeviceData;
-import com.ezlinker.app.modules.dataentry.service.DeviceDataService;
 import com.ezlinker.app.modules.module.model.Module;
 import com.ezlinker.app.modules.module.service.IModuleService;
 import com.ezlinker.app.modules.module.service.ModuleDataService;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 
 /**
  * <p>
@@ -43,9 +40,6 @@ public class ModuleController extends CurdController<Module> {
 
     @Resource
     ModuleDataService moduleDataService;
-
-    @Resource
-    DeviceDataService deviceDataService;
 
     @Resource
     IModuleTemplateConfigService iModuleTemplateConfigService;
@@ -102,7 +96,7 @@ public class ModuleController extends CurdController<Module> {
      */
     @GetMapping("/logs")
     public R logs(@RequestParam Integer current, @RequestParam Integer size, @RequestParam(required = false) Long moduleId) {
-        Pageable pageable = PageRequest.of(current, size, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(current, size, Sort.by(Sort.Direction.DESC, "_id"));
         return data(moduleLogService.queryForPage(moduleId, pageable));
     }
 
@@ -122,36 +116,6 @@ public class ModuleController extends CurdController<Module> {
         }
 
         return data(moduleDataService.queryForPage(moduleId, pageable));
-    }
-
-
-    /**
-     * 获取状态
-     * 设备数据表：device_data_{projectId}_{deviceId}
-     *
-     * @return
-     * @throws XException
-     */
-    @GetMapping("/{moduleIds}/{projectId}/status")
-    public R status(@PathVariable Long[] moduleIds, @PathVariable Long projectId) throws XException {
-        HashMap<Long, HashMap<String, Object>> map = new HashMap<>();
-        for (Long id : moduleIds) {
-
-            Pageable pageable = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "_id"));
-            IPage<DeviceData> page = deviceDataService.queryForPage(projectId, id, pageable);
-            if (page.getRecords().size() > 0) {
-                DeviceData deviceData = deviceDataService.queryForPage(projectId, id, pageable).getRecords().get(0);
-                HashMap<String, Object> status = new HashMap<>();
-                status.put("status", deviceData.getData());
-                status.put("createTime", deviceData.getCreateTime());
-                map.put(id, status);
-            } else {
-                map.put(id, null);
-
-            }
-
-        }
-        return data(map);
     }
 
     /**

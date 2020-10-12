@@ -3,6 +3,7 @@ package com.ezlinker.app.modules.analyse.controller;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.utils.OSMonitor;
 import com.ezlinker.app.common.web.XController;
+import com.ezlinker.app.modules.constant.MongoCollectionPrefix;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -73,7 +74,7 @@ public class NetworkMonitorController extends XController {
         query.addCriteria(Criteria.where("createTime")
                 .lte(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(end.format(dateTimeFormatter)))
                 .gte(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(start.format(dateTimeFormatter))));
-        List<Map> dataList = mongoTemplate.find(query, Map.class, "system_network_log");
+        List<Map> dataList = mongoTemplate.find(query, Map.class, MongoCollectionPrefix.SYSTEM_NETWORK_LOG);
 
         Map<String, Object> result = new LinkedHashMap<>();
         //遍历取值加工

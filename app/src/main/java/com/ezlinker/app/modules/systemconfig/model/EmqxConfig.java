@@ -1,6 +1,5 @@
 package com.ezlinker.app.modules.systemconfig.model;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ezlinker.app.common.model.XEntity;
 import lombok.Data;
@@ -8,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -23,16 +21,6 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 @TableName("ez_emqx_config")
 public class EmqxConfig extends XEntity {
-
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 在线 1
-     * 离线 0
-     */
-    public static final int OFFLINE = 0;
-    public static final int ONLINE = 1;
-
     /**
      * EMQX IP地址
      */
@@ -50,40 +38,22 @@ public class EmqxConfig extends XEntity {
      * APP接口密钥
      */
     @NotEmpty(message = "secret不可为空值")
-
     private String secret;
-
-    /**
-     * 描述
-     */
-    private String description;
-
     /**
      * 集群节点名称
      */
     @NotEmpty(message = "节点名称不可为空值,格式为:nodeName@ip")
-
     private String nodeName;
     /**
-     *
+     *  HTTP API 端口
      */
-    @NotNull(message = "API端口不可为空值")
-
-    private Integer port;
-
+    private Integer apiPort = 8081;
     /**
-     * 状态
+     *  MQTT TCP端口
      */
-    private Integer state = 0;
+    private Integer mqttPort = 1883;
     /**
-     * 历史运行状态
+     * 描述
      */
-    @TableField(exist = false)
-    private Object historyRunningState;
-    /**
-     * 当前状态
-     */
-    @TableField(exist = false)
-    private Object currentRunningState;
-
+    private String description;
 }

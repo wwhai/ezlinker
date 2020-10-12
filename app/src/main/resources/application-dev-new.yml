@@ -92,8 +92,7 @@ logging:
     root: info
     org.springframework.data.mongodb.core: DEBUG
     com.baomidou.mybatisplus.core.mapper: DEBUG
-    web: debug
-
+    web: info
 aliyun:
   mail:
     access-key: ULw8nLnKBktSbOhI

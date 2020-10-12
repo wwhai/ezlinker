@@ -6,9 +6,7 @@ import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
 import com.ezlinker.app.modules.userlog.model.UserLoginLog;
 import com.ezlinker.app.modules.userlog.service.IUserLoginLogService;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,9 +40,9 @@ public class UserLoginLogController extends CurdController<UserLoginLog> {
      * @throws XException
      */
     @GetMapping
-    public R queryForPage(@RequestParam Integer current, @RequestParam Integer size) throws XException {
-        Pageable pageable = PageRequest.of(current, size, Sort.by(Sort.Direction.DESC, "id"));
-
+    public R queryForPage(@RequestParam(required = false, defaultValue = "0") Integer current,
+                          @RequestParam(required = false, defaultValue = "20") Integer size) throws XException {
+        Pageable pageable = getXPageRequest(current, size);
         return data(iUserLoginLogService.queryForPage(getUserDetail().getId(), pageable));
     }
 

@@ -8,8 +8,11 @@ import com.ezlinker.app.common.exception.PermissionForbiddenException;
 import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.model.XEntity;
+import com.ezlinker.app.common.query.QueryItem;
 import com.ezlinker.app.modules.authorize.model.ResourceAuthorize;
 import com.ezlinker.app.modules.authorize.service.IResourceAuthorizeService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -65,20 +67,14 @@ public abstract class CurdController<T> extends XController {
      * 动态参数请求
      * 一般用Map来构建
      *
-     * @param args
+     * @param queryArgs
      * @return
      * @throws XException
      */
-    @PostMapping("/dynamicAdd")
-    protected R dynamicAdd(XRequestArgs<T> args) throws XException {
+    @PostMapping("/query")
+    protected R query(List<QueryItem> queryArgs) throws XException {
         return success();
     }
-
-    @PostMapping("/dynamicAdds")
-    protected R dynamicAdd(List<? extends HashMap<String, Object>> args) throws XException {
-        return success();
-    }
-
 
     /**
      * 批量删除T
@@ -217,6 +213,7 @@ public abstract class CurdController<T> extends XController {
         }
 
     }
+
     /**
      * 产生分页
      *
@@ -226,5 +223,28 @@ public abstract class CurdController<T> extends XController {
      */
     protected final IPage<T> p(Integer current, Integer size) {
         return new Page<>(current, size);
+    }
+
+    /**
+     * 头疼:Mongo template 下标从0开始
+     * 专门提供一个生成Mongo分页的的Page方法
+     *
+     * @param current
+     * @param size
+     * @return
+     */
+    protected PageRequest getXPageRequest(int current, int size) {
+        return PageRequest.of(current >= 1 ? current - 1 : current, size, Sort.by(Sort.Direction.DESC, "_id"));
+    }
+
+    /**
+     * Mysql 分页对象生成器
+     *
+     * @param current
+     * @param size
+     * @return
+     */
+    protected PageRequest getMYPageRequest(int current, int size) {
+        return PageRequest.of(current, size, Sort.by(Sort.Direction.DESC, "id"));
     }
 }

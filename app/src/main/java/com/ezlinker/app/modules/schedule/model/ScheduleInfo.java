@@ -1,5 +1,6 @@
 package com.ezlinker.app.modules.schedule.model;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
@@ -33,18 +34,6 @@ public class ScheduleInfo extends XEntity {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 启动状态
-     */
-    public static int RUNNING = 0;
-    /**
-     * 暂停状态
-     */
-    public static int PAUSE = 1;
-    /**
-     * 停滞状态
-     */
-    public static int STOP = 2;
 
     public static String DEFAULT_JOB_GROUP = "DEFAULT_JOB_GROUP";
     public static String DEFAULT_TRIGGER_GROUP = "DEFAULT_TRIGGER_GROUP";
@@ -95,7 +84,8 @@ public class ScheduleInfo extends XEntity {
     /**
      *
      */
-    private Integer status = STOP;
+    @EnumValue
+    private ScheduleType status = ScheduleType.STOP;
 
     /**
      * 计划任务的指令

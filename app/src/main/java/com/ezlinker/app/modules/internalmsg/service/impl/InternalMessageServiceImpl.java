@@ -2,6 +2,7 @@ package com.ezlinker.app.modules.internalmsg.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.ezlinker.app.common.web.XPage;
 import com.ezlinker.app.modules.internalmsg.model.InternalMessage;
 import com.ezlinker.app.modules.internalmsg.service.InternalMessageService;
 import org.bson.types.ObjectId;
@@ -61,6 +62,8 @@ public class InternalMessageServiceImpl implements InternalMessageService {
     @Override
     public IPage<InternalMessage> queryForPage(Long userId, Integer marked, Pageable pageable) {
         Query query = new Query();
+        long total = mongoTemplate.count(query, "internal_message");
+
 //        Sort sort = new Sort(Sort.Direction.ASC, "");
 
         query.addCriteria(Criteria.where("userId").is(userId));
@@ -69,54 +72,7 @@ public class InternalMessageServiceImpl implements InternalMessageService {
         query.with(pageable);
 
         List<InternalMessage> list = mongoTemplate.find(query, InternalMessage.class, "internal_message");
-        long total = mongoTemplate.count(query, "internal_message");
-
-        return new IPage<InternalMessage>() {
-            @Override
-            public List<OrderItem> orders() {
-                return OrderItem.descs("createTime");
-            }
-
-            @Override
-            public List<InternalMessage> getRecords() {
-                return list;
-            }
-
-            @Override
-            public IPage<InternalMessage> setRecords(List<InternalMessage> records) {
-                return this;
-            }
-
-            @Override
-            public long getTotal() {
-                return total;
-            }
-
-            @Override
-            public IPage<InternalMessage> setTotal(long total) {
-                return this;
-            }
-
-            @Override
-            public long getSize() {
-                return pageable.getPageSize();
-            }
-
-            @Override
-            public IPage<InternalMessage> setSize(long size) {
-                return this;
-            }
-
-            @Override
-            public long getCurrent() {
-                return pageable.getPageNumber();
-            }
-
-            @Override
-            public IPage<InternalMessage> setCurrent(long current) {
-                return this;
-            }
-        };
+        return new XPage<>(list, total, OrderItem.descs("_id"), pageable);
     }
 
     @Override

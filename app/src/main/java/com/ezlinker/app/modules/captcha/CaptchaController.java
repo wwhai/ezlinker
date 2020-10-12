@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -37,15 +39,16 @@ public class CaptchaController {
         SpecCaptcha captcha = new SpecCaptcha(130, 48, 5);
         captcha.setFont(Captcha.FONT_9);
         captcha.setCharType(Captcha.TYPE_NUM_AND_UPPER);
-
-        String code = captcha.text().toLowerCase();
         String key = UUID.randomUUID().toString();
+        String code = captcha.text().toLowerCase();
         // 存入redis并设置过期时间为1分钟
         try {
-            Boolean set = redisUtil.set("CAPTCHA:" + code, key, 60);
+            Boolean set = redisUtil.set("USER_LOGIN_CAPTCHA:" + key, code, 60);
             if (set) {
-                log.debug("Key:" + key + " Code:" + code);
-                return new R(200, "Captcha generate success", "验证码获取成功", captcha.toBase64());
+                Map<String, Object> map = new HashMap<>();
+                map.put("uuid", key);
+                map.put("captcha", captcha.toBase64());
+                return new R(200, "Captcha generate success", "验证码获取成功", map);
 
             } else {
                 throw new InternalServerException("Internal error,Maybe redis has downed", "系统内部错误");

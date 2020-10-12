@@ -5,19 +5,20 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ezlinker.app.common.exception.BadRequestException;
 import com.ezlinker.app.common.exception.BizException;
 import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
+import com.ezlinker.app.common.utils.RedisUtil;
 import com.ezlinker.app.common.web.CurdController;
+import com.ezlinker.app.modules.constant.MongoCollectionPrefix;
+import com.ezlinker.app.modules.constant.RedisKeyPrefix;
+import com.ezlinker.app.modules.dataentry.service.DeviceDataService;
 import com.ezlinker.app.modules.device.model.Device;
 import com.ezlinker.app.modules.device.pojo.FieldParam;
 import com.ezlinker.app.modules.device.service.IDeviceService;
-import com.ezlinker.app.modules.module.model.Module;
-import com.ezlinker.app.modules.module.model.StreamIntegration;
-import com.ezlinker.app.modules.module.service.IModuleService;
-import com.ezlinker.app.modules.module.service.IStreamIntegrationService;
-import com.ezlinker.app.modules.moduletemplate.model.ModuleTemplate;
-import com.ezlinker.app.modules.moduletemplate.service.IModuleTemplateService;
+import com.ezlinker.app.modules.devicelog.DeviceLogService;
+import com.ezlinker.app.modules.emqx.monitor.EMQMonitorV4;
 import com.ezlinker.app.modules.mqtttopic.model.MqttTopic;
 import com.ezlinker.app.modules.mqtttopic.service.IMqttTopicService;
 import com.ezlinker.app.modules.product.model.Product;
@@ -27,13 +28,15 @@ import com.ezlinker.app.utils.IDKeyUtil;
 import com.ezlinker.app.utils.TokenUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -52,21 +55,26 @@ public class DeviceController extends CurdController<Device> {
     private static final int TOPIC_SUB = 2;
 
     @Resource
+    RedisUtil redisUtil;
+    @Resource
     IProductService iProductService;
     @Resource
     IDeviceService iDeviceService;
     @Resource
-    IModuleService iModuleService;
+    DeviceDataService deviceDataService;
+
+    @Resource
+    DeviceLogService deviceLogService;
     @Resource
     IMqttTopicService iMqttTopicService;
-    @Resource
-    IModuleTemplateService iModuleTemplateService;
+
     @Resource
     IDeviceProtocolConfigService iDeviceProtocolConfigService;
-    @Resource
-    IStreamIntegrationService iStreamIntegrationService;
+
     @Resource
     IDKeyUtil idKeyUtil;
+    @Resource
+    MongoTemplate mongoTemplate;
 
     public DeviceController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest);
@@ -108,30 +116,41 @@ public class DeviceController extends CurdController<Device> {
      */
     @GetMapping
     public R queryForPage(
-            @RequestParam(required = false) Long productId,
             @RequestParam(required = false, defaultValue = "1") Integer current,
             @RequestParam(required = false, defaultValue = "20") Integer size,
-            @RequestParam(required = false) Long projectId,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String industry,
-            @RequestParam(required = false) String sn,
-            @RequestParam(required = false) String model) {
-
-        QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
-
-        queryWrapper.eq(projectId != null, "project_id", projectId);
-        queryWrapper.eq(productId != null, "product_id", productId).or();
-        queryWrapper.like((sn != null) && sn.length() > 0, "sn", sn).or();
-        queryWrapper.like((model != null) && model.length() > 0, "model", model).or();
-        queryWrapper.like((name != null) && name.length() > 0, "name", name).or();
-        queryWrapper.like((industry != null) && industry.length() > 0, "industry", industry);
-        queryWrapper.orderByDesc("create_time");
-        // TODO 重新设计Page接口，使其可以返回项目和产品的名称
-        IPage<Device> devicePage = iDeviceService.queryForPage(sn, name, model, industry, new Page<>(current, size));
-        // IPage<Device> devicePage = iDeviceService.page(new Page<>(current, size), queryWrapper);
+            @RequestParam(required = false, defaultValue = "") String name,
+            @RequestParam(required = false, defaultValue = "") Long projectId,
+            @RequestParam(required = false, defaultValue = "") Long productId,
+            @RequestParam(required = false, defaultValue = "") String industry,
+            @RequestParam(required = false, defaultValue = "") String sn,
+            @RequestParam(required = false, defaultValue = "") String model) {
+        IPage<Device> devicePage = iDeviceService.queryForPage(sn, name, projectId, productId, model, industry, new Page<>(current, size));
         return data(devicePage);
     }
 
+    /**
+     * 删除设备
+     *
+     * @param ids
+     * @return
+     * @throws XException
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @DeleteMapping
+    @Override
+    protected R delete(@RequestParam Integer[] ids) throws XException {
+        for (Device device : iDeviceService.listByIds(Arrays.asList(ids))) {
+            Map<Object, Object> runningMap = redisUtil.hmget(RedisKeyPrefix.DEVICE_RUNNING_STATE + device.getClientId());
+            if (runningMap != null && (!runningMap.isEmpty())) {
+                throw new BizException("", "设备在运行状态,不可删除,建议先停止设备");
+            } else {
+                iMqttTopicService.remove(new QueryWrapper<MqttTopic>().eq("device_id", device.getId()));
+                mongoTemplate.dropCollection(MongoCollectionPrefix.DEVICE_HISTORY_DATA + device.getClientId());
+            }
+
+        }
+        return success();
+    }
 
     /**
      * 创建设备
@@ -165,89 +184,173 @@ public class DeviceController extends CurdController<Device> {
                 .setLogo(product.getLogo())
                 .setToken(TokenUtil.token(clientId))
                 .setSn("SN" + idKeyUtil.nextId());
-        // 保存设备
+        for (FieldParam area : new ObjectMapper().convertValue(form.getFieldParams(), new TypeReference<List<FieldParam>>() {
+        })) {
+            redisUtil.hset(RedisKeyPrefix.DEVICE_FIELD_PARAMS + clientId, area.getField(), area.getField());
+        }
 
         iDeviceService.save(form);
-
-
-        // 从设计好的产品模板里面拿数据
-        // 先查到当时设计的产品下的所有模块的模板
-        // 然后用模板模板来构建具体的实际模块
-        List<ModuleTemplate> moduleTemplates = iModuleTemplateService.list(new QueryWrapper<ModuleTemplate>().eq("product_id", product.getId()));
-
-
-        for (ModuleTemplate moduleTemplate : moduleTemplates) {
-            Module newModule = new Module();
-            newModule.setName(moduleTemplate.getName())
-                    .setFieldParams(moduleTemplate.getFieldParams())
-                    .setDeviceId(form.getId());
-            // 对象转换
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<FieldParam> dataAreasList = objectMapper.convertValue(moduleTemplate.getFieldParams(),
-                    new TypeReference<List<FieldParam>>() {
-                    });
-
-            // 构建Token
-            StringBuilder stringBuilder = new StringBuilder("[");
-            for (FieldParam area : dataAreasList) {
-                stringBuilder.append(area.getField()).append(",");
-            }
-            stringBuilder.replace(stringBuilder.length() - 1, stringBuilder.length(), "").append("]");
-            // 生成给Token，格式：clientId::[field1,field2,field3······]
-            // token里面包含了模块的字段名,这样在数据入口处可以进行过滤。
-            String token = TokenUtil.token(clientId + "::" + stringBuilder);
-            newModule.setToken(token);
-            newModule.setIcon(moduleTemplate.getIcon());
-            // 如果是流媒体设备 需要在这里做一些操作
-            // 1 可能在这里向阿里云之类的三方厂家申请Key
-            // 2 然后把Key保存倒数据库，作为视频流设备的推流入口
-            // 另一种就是自己搭建平台，一般人不会这么玩，所以这里暂时就默认为三方云服务
-            if (moduleTemplate.getType().equals(ModuleTemplate.ModuleType.STREAM)) {
-                StreamIntegration streamIntegration = new StreamIntegration();
-                streamIntegration.setModuleId(newModule.getId());
-                // 假设这里已经申请到了
-                // 实际场景下要用三方SDK去生成
-                // 开发阶段暂时不处理此处
-                streamIntegration.setSecret("secret");
-                streamIntegration.setToken("token");
-                iStreamIntegrationService.save(streamIntegration);
-            }
-            iModuleService.save(newModule);
-        }
 
         /**
          * 给MQTT协议的[设备]安装口令
          */
 
-        // 数据上行
+        // 服务器->>> 客户端
         MqttTopic s2cTopic = new MqttTopic();
         s2cTopic.setAccess(TOPIC_SUB)
                 .setType(MqttTopic.S2C)
                 .setClientId(clientId)
                 .setDeviceId(form.getId())
-                .setTopic("mqtt/out/" + form.getClientId() + "/s2c")
+                .setTopic("$EZLINKER/" + form.getClientId() + "/s2c")
                 .setUsername(username);
-        // 数据下行
+        // 客户端->>>服务器
         MqttTopic c2sTopic = new MqttTopic();
         c2sTopic.setAccess(TOPIC_PUB)
                 .setType(MqttTopic.C2S)
                 .setDeviceId(form.getId())
                 .setClientId(clientId)
-                .setTopic("mqtt/in/" + form.getClientId() + "/c2s")
+                .setTopic("$EZLINKER/" + form.getClientId() + "/c2s")
                 .setUsername(username);
-        // 状态上报
+        // 客户端->>>服务器
         MqttTopic statusTopic = new MqttTopic();
         statusTopic.setAccess(TOPIC_PUB)
                 .setType(MqttTopic.STATUS)
                 .setUsername(username)
                 .setClientId(clientId)
                 .setDeviceId(form.getId())
-                .setTopic("mqtt/in/" + form.getClientId() + "/status");
+                .setTopic("$EZLINKER/" + form.getClientId() + "/status");
         // 生成
         iMqttTopicService.save(s2cTopic);
         iMqttTopicService.save(c2sTopic);
         iMqttTopicService.save(statusTopic);
         return data(form);
+    }
+
+    /**
+     * 获取状态,状态保存在Redis里面
+     *
+     * @param clientId
+     * @param fields
+     * @return
+     */
+    @GetMapping("/lastState")
+    public R getLastState(@PathVariable String clientId, @PathVariable String[] fields) {
+        List<LinkedHashMap<String, Object>> list = iDeviceService.getLastState(clientId, fields);
+        return data(list);
+    }
+
+    /**
+     * @param clientIds
+     * @return
+     */
+    @PostMapping("/onlineState")
+    public R getOnlineState(@RequestBody String[] clientIds) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (String clientId : clientIds) {
+            Object state = redisUtil.get("DEVICE_ON_OFF_LINE_STATE:" + clientId);
+            Map<String, Object> map = new HashMap<>();
+            if (state != null) {
+                map.put("clientId", clientId);
+                map.put("state", state);
+                list.add(map);
+            } else {
+                map.put("clientId", clientId);
+                map.put("state", "OFFLINE");
+                list.add(map);
+            }
+
+        }
+        return data(list);
+    }
+
+    /**
+     * 获取系统内设备的上下线记录
+     *
+     * @param current
+     * @param size
+     * @return
+     */
+    @GetMapping("/deviceLogs")
+    public R deviceLogs(@RequestParam(required = false, defaultValue = "0") Integer current,
+                        @RequestParam(required = false, defaultValue = "20") Integer size,
+                        @RequestParam(required = false, defaultValue = "") String clientId) {
+        Pageable pageable = getXPageRequest(current, size);
+        return data(deviceLogService.queryForPage(clientId, pageable));
+
+    }
+
+    /**
+     * 设备历史数据
+     *
+     * @param current
+     * @param size
+     * @param clientId
+     * @return
+     */
+    @GetMapping("/deviceData")
+    public R deviceData(@RequestParam(required = false, defaultValue = "0") Integer current,
+                        @RequestParam(required = false, defaultValue = "20") Integer size,
+                        @RequestParam String clientId) {
+        Pageable pageable = getXPageRequest(current, size);
+        return data(deviceDataService.queryForPage(clientId, pageable));
+
+    }
+
+    /**
+     * 获取历史状态
+     *
+     * @param current
+     * @param size
+     * @param clientId
+     * @param fields
+     * @return
+     */
+    @GetMapping("/deviceState")
+    public R deviceState(@RequestParam(required = false, defaultValue = "0") Integer current,
+                         @RequestParam(required = false, defaultValue = "20") Integer size,
+                         @RequestParam String clientId, @RequestParam String[] fields) {
+        Pageable pageable = getXPageRequest(current, size);
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("fields", fields);
+        map.put("data", iDeviceService.getHistoryState(clientId, fields, pageable));
+        return data(map);
+
+    }
+
+
+    /**
+     * 强制重连
+     *
+     * @param clientId
+     * @return
+     */
+
+    @RequestMapping("/forceOffline")
+    public R forceOffline(@RequestParam String clientId) throws BizException, BadRequestException {
+
+        Set<Object> nodes = redisUtil.sGet(RedisKeyPrefix.EMQX_NODE_NAME);
+        if (nodes.isEmpty()) {
+            throw new BizException("EMQX节点离线", "EMQX节点离线");
+
+        }
+        Map<Object, Object> node = redisUtil.hmget(RedisKeyPrefix.EMQX_NODE_STATE + nodes.toArray()[0].toString());
+
+        if (nodes.isEmpty()) {
+            throw new BizException("EMQX节点离线", "EMQX节点离线");
+        }
+
+        String ip = node.get("ip").toString();
+        Integer apiPort = Integer.parseInt(node.get("apiPort").toString());
+        String appId = node.get("appId").toString();
+        String secret = node.get("secret").toString();
+        Integer code = EMQMonitorV4.kickoff(ip, apiPort, clientId, appId, secret);
+        if (code == 0) {
+            return success();
+        } else if (code == 112) {
+            throw new BizException("客户端已经离线", "客户端已经离线");
+        } else {
+            throw new BadRequestException("操作失败", "操作失败");
+        }
     }
 }
 

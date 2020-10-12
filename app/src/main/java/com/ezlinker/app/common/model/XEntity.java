@@ -23,7 +23,6 @@ public class XEntity implements Serializable {
     /**
      * ID
      */
-    @TableField(value = "id")
     @TableId(type = IdType.AUTO, value = "id")
     private Long id;
     /**

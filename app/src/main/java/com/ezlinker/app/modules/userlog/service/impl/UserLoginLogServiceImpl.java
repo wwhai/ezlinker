@@ -2,6 +2,8 @@ package com.ezlinker.app.modules.userlog.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.ezlinker.app.common.web.XPage;
+import com.ezlinker.app.modules.constant.MongoCollectionPrefix;
 import com.ezlinker.app.modules.userlog.model.UserLoginLog;
 import com.ezlinker.app.modules.userlog.service.IUserLoginLogService;
 import org.springframework.data.domain.Pageable;
@@ -30,66 +32,18 @@ public class UserLoginLogServiceImpl implements IUserLoginLogService<UserLoginLo
 
     @Override
     public void save(UserLoginLog entity) {
-        mongoTemplate.insert(entity, "user_login_log");
+        mongoTemplate.insert(entity, MongoCollectionPrefix.USER_LOGIN_LOG);
     }
 
     @Override
     public IPage<UserLoginLog> queryForPage(Long userId, Pageable pageable) {
         Query query = new Query();
+        long total = mongoTemplate.count(query, MongoCollectionPrefix.USER_LOGIN_LOG);
         Criteria criteria = Criteria.where("userId").is(userId);
         query.addCriteria(criteria);
-
-        query.with(Sort.by(Sort.Direction.DESC, "id"));
+        query.with(Sort.by(Sort.Direction.DESC, "_id"));
         query.with(pageable);
-
-        List<UserLoginLog> list = mongoTemplate.find(query, UserLoginLog.class, "user_login_log");
-        long total = mongoTemplate.count(query, "user_login_log");
-
-        return new IPage<UserLoginLog>() {
-            @Override
-            public List<OrderItem> orders() {
-                return OrderItem.descs("id");
-            }
-
-            @Override
-            public List<UserLoginLog> getRecords() {
-                return list;
-            }
-
-            @Override
-            public IPage<UserLoginLog> setRecords(List<UserLoginLog> records) {
-                return this;
-            }
-
-            @Override
-            public long getTotal() {
-                return total;
-            }
-
-            @Override
-            public IPage<UserLoginLog> setTotal(long total) {
-                return this;
-            }
-
-            @Override
-            public long getSize() {
-                return pageable.getPageSize();
-            }
-
-            @Override
-            public IPage<UserLoginLog> setSize(long size) {
-                return this;
-            }
-
-            @Override
-            public long getCurrent() {
-                return pageable.getPageNumber();
-            }
-
-            @Override
-            public IPage<UserLoginLog> setCurrent(long current) {
-                return this;
-            }
-        };
+        List<UserLoginLog> list = mongoTemplate.find(query, UserLoginLog.class, MongoCollectionPrefix.USER_LOGIN_LOG);
+        return new XPage<>(list, total, OrderItem.descs("_id"), pageable);
     }
 }

@@ -22,8 +22,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Resource
     ProductMapper productMapper;
 
+
     @Override
-    public Product getDetail(long id) {
-        return productMapper.getDetail(id);
+    public Product details(Long productId) {
+        return productMapper.details(productId);
     }
 }

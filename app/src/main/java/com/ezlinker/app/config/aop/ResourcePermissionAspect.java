@@ -2,12 +2,11 @@ package com.ezlinker.app.config.aop;
 
 import com.ezlinker.app.common.exception.XException;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.springframework.stereotype.Component;
 
-@Aspect
-@Component
+//
+//@Aspect
+//@Component
 public class ResourcePermissionAspect {
 
     /**

@@ -12,6 +12,6 @@ import com.ezlinker.app.modules.product.model.Product;
  * @since 2019-11-13
  */
 public interface IProductService extends IService<Product> {
-    Product getDetail(long id);
+    Product details(Long productId);
 
 }

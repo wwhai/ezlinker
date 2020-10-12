@@ -2,6 +2,7 @@ package com.ezlinker.app.modules.module.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.ezlinker.app.common.web.XPage;
 import com.ezlinker.app.modules.module.model.ModuleLog;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -51,53 +52,7 @@ public class ModuleLogService {
 
         List<ModuleLog> list = mongoOperations.find(query, ModuleLog.class, "module_log");
         long total = mongoOperations.count(query, "module_log");
-
-        return new IPage<ModuleLog>() {
-            @Override
-            public List<OrderItem> orders() {
-                return OrderItem.descs("_id");
-            }
-
-            @Override
-            public List<ModuleLog> getRecords() {
-                return list;
-            }
-
-            @Override
-            public IPage<ModuleLog> setRecords(List<ModuleLog> records) {
-                return this;
-            }
-
-            @Override
-            public long getTotal() {
-                return total;
-            }
-
-            @Override
-            public IPage<ModuleLog> setTotal(long total) {
-                return this;
-            }
-
-            @Override
-            public long getSize() {
-                return pageable.getPageSize();
-            }
-
-            @Override
-            public IPage<ModuleLog> setSize(long size) {
-                return this;
-            }
-
-            @Override
-            public long getCurrent() {
-                return pageable.getPageNumber();
-            }
-
-            @Override
-            public IPage<ModuleLog> setCurrent(long current) {
-                return this;
-            }
-        };
+        return new XPage<>(list, total, OrderItem.descs("_id"), pageable);
     }
 
 }

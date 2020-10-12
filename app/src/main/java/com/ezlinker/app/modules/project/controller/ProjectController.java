@@ -66,9 +66,15 @@ public class ProjectController extends CurdController<Project> {
     @GetMapping("/icons")
     public R icons() {
         List<String> urls = new ArrayList<>();
-        urls.add("https://s2.ax1x.com/2020/03/03/3fzDo9.th.png");
-        urls.add("https://s2.ax1x.com/2020/03/03/3fz6Rx.th.png");
-        urls.add("https://s2.ax1x.com/2020/03/03/3fztzV.th.png");
+        urls.add("https://s1.ax1x.com/2020/09/15/wcSZhd.th.png");
+        urls.add("https://s1.ax1x.com/2020/09/15/w6zGS1.th.png");
+        urls.add("https://s1.ax1x.com/2020/09/15/w6z3WR.th.png");
+        urls.add("https://s1.ax1x.com/2020/09/15/w6z1Y9.th.png");
+        urls.add("https://s1.ax1x.com/2020/09/15/wcpNIe.th.png");
+        urls.add("https://s1.ax1x.com/2020/09/15/wcpYVO.th.png");
+        urls.add("https://s1.ax1x.com/2020/09/15/wcptaD.th.png");
+        urls.add("https://s1.ax1x.com/2020/09/15/wcpGqK.th.png");
+
         return data(urls);
     }
 
