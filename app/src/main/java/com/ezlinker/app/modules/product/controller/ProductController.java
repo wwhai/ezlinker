@@ -11,8 +11,6 @@ import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.XController;
 import com.ezlinker.app.modules.device.model.Device;
 import com.ezlinker.app.modules.device.service.IDeviceService;
-import com.ezlinker.app.modules.module.model.Module;
-import com.ezlinker.app.modules.module.service.IModuleService;
 import com.ezlinker.app.modules.product.model.Product;
 import com.ezlinker.app.modules.product.service.IProductService;
 import com.ezlinker.app.modules.relation.model.RelationProductModule;
@@ -22,9 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * <p>
@@ -43,9 +38,6 @@ public class ProductController extends XController {
 
     @Resource
     IDeviceService iDeviceService;
-
-    @Resource
-    IModuleService iModuleService;
 
     @Resource
     IRelationProductModuleService iRelationProductModuleService;
@@ -80,9 +72,17 @@ public class ProductController extends XController {
      */
 
     @DeleteMapping("/{ids}")
-    public R delete(@PathVariable Integer[] ids) {
-        boolean ok = iProductService.removeByIds(Arrays.asList(ids));
-        return ok ? success() : fail();
+    public R delete(@PathVariable Integer[] ids) throws BizException {
+        for (Integer id : ids) {
+            // 查询是否有生产了设备
+            int count = iDeviceService.count(new QueryWrapper<Device>().eq("product_id", id));
+            if (count > 0) {
+                throw new BizException("", "该产品下已经生产设备,不可删除");
+            } else {
+                iProductService.removeById(id);
+            }
+        }
+        return success();
     }
 
 
@@ -154,78 +154,6 @@ public class ProductController extends XController {
         return data(projectPage);
     }
 
-
-    /**
-     * 获取模块信息
-     *
-     * @param productId
-     * @param moduleId
-     * @return
-     * @throws XException
-     */
-    @GetMapping("/module/get")
-    public R getModule(@RequestParam Long productId, @RequestParam Long moduleId) throws XException {
-
-
-        RelationProductModule relation = iRelationProductModuleService
-                .getOne(new QueryWrapper<RelationProductModule>().eq("product_id", productId).eq("module_id", moduleId));
-        if (relation == null) {
-            throw new BizException("Product or module not exists!", "产品或模块不存在");
-        }
-
-        Module module = iModuleService.getById(moduleId);
-        return data(module);
-    }
-
-    @GetMapping("/module")
-    public R queryModuleForPage(
-            @RequestParam Long productId,
-            @RequestParam Integer current,
-            @RequestParam Integer size) {
-
-        //获取product 关联的 module
-        QueryWrapper<RelationProductModule> relationQuery = new QueryWrapper<>();
-        relationQuery.eq("product_id", productId);
-        List<RelationProductModule> relationList = iRelationProductModuleService
-                .page(new Page<>(current, size), relationQuery).getRecords();
-
-        //获取module_id
-        List<Long> ids = new ArrayList<>(relationList.size());
-        for (RelationProductModule rel : relationList) {
-            ids.add(rel.getModuleId());
-        }
-
-        //通过module_id_list 获取module_list
-        List<Module> moduleList = iModuleService.list(new QueryWrapper<Module>().in("id", ids));
-
-        return data(moduleList);
-    }
-
-    /**
-     * 为产品添加模块
-     *
-     * @param relation
-     * @return
-     */
-    @PostMapping("/module")
-    public R addModule(@RequestBody RelationProductModule relation) throws BizException {
-        Long productId = relation.getProductId();
-        Product product = iProductService.getById(productId);
-        if (product == null) {
-            throw new BizException("Product not exists!", "产品不存在");
-        }
-
-        Long moduleId = relation.getModuleId();
-        Module module = iModuleService.getById(moduleId);
-        if (module == null) {
-            throw new BizException("Module not exists!", "模块不存在");
-        }
-
-
-        boolean ok = iRelationProductModuleService.save(relation);
-
-        return ok ? data(relation) : fail();
-    }
 
     @PutMapping("/module")
     public R updateModule(@RequestBody RelationProductModule newRelation) throws BizException {

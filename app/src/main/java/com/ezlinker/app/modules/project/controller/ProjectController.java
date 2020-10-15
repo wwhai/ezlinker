@@ -8,18 +8,20 @@ import com.ezlinker.app.common.exception.BizException;
 import com.ezlinker.app.common.exception.XException;
 import com.ezlinker.app.common.exchange.R;
 import com.ezlinker.app.common.web.CurdController;
+import com.ezlinker.app.modules.device.model.Device;
+import com.ezlinker.app.modules.device.service.IDeviceService;
 import com.ezlinker.app.modules.project.model.Project;
 import com.ezlinker.app.modules.project.service.IProjectService;
 import com.ezlinker.app.modules.relation.model.RelationUserProject;
 import com.ezlinker.app.modules.relation.service.IRelationUserProjectService;
 import com.ezlinker.app.modules.user.service.IUserService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,6 +38,8 @@ public class ProjectController extends CurdController<Project> {
     @Resource
     IProjectService iProjectService;
 
+    @Resource
+    IDeviceService iDeviceService;
     @Resource
     IRelationUserProjectService iRelationUserProjectService;
 
@@ -86,10 +90,20 @@ public class ProjectController extends CurdController<Project> {
      * @return
      */
 
+    @Transactional(rollbackFor = Exception.class)
+    @DeleteMapping("/ids")
     @Override
-    protected R delete(@PathVariable Integer[] ids) {
-        boolean ok = iProjectService.removeByIds(Arrays.asList(ids));
-        return ok ? success() : fail();
+    protected R delete(@PathVariable Integer[] ids) throws BizException {
+        for (Integer id : ids) {
+            // 查询是否有生产了设备
+            int count = iDeviceService.count(new QueryWrapper<Device>().eq("project_id", id));
+            if (count > 0) {
+                throw new BizException("", "该项目下已经生产设备,不可删除");
+            } else {
+                iProjectService.removeById(id);
+            }
+        }
+        return success();
     }
 
     /**

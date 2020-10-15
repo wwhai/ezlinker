@@ -23,7 +23,6 @@ import com.ezlinker.app.modules.mqtttopic.model.MqttTopic;
 import com.ezlinker.app.modules.mqtttopic.service.IMqttTopicService;
 import com.ezlinker.app.modules.product.model.Product;
 import com.ezlinker.app.modules.product.service.IProductService;
-import com.ezlinker.app.modules.systemconfig.service.IDeviceProtocolConfigService;
 import com.ezlinker.app.utils.IDKeyUtil;
 import com.ezlinker.app.utils.TokenUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -69,25 +68,12 @@ public class DeviceController extends CurdController<Device> {
     IMqttTopicService iMqttTopicService;
 
     @Resource
-    IDeviceProtocolConfigService iDeviceProtocolConfigService;
-
-    @Resource
     IDKeyUtil idKeyUtil;
     @Resource
     MongoTemplate mongoTemplate;
 
     public DeviceController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest);
-    }
-
-    /**
-     * 获取当前支持的协议的类型，目前暂时支持4种
-     *
-     * @return
-     */
-    @GetMapping("/protocols")
-    public R getProtocols() {
-        return data(iDeviceProtocolConfigService.list());
     }
 
     /**
@@ -144,10 +130,11 @@ public class DeviceController extends CurdController<Device> {
             if (runningMap != null && (!runningMap.isEmpty())) {
                 throw new BizException("", "设备在运行状态,不可删除,建议先停止设备");
             } else {
+                // 删除所有Topic
                 iMqttTopicService.remove(new QueryWrapper<MqttTopic>().eq("device_id", device.getId()));
+                // 删除历史数据
                 mongoTemplate.dropCollection(MongoCollectionPrefix.DEVICE_HISTORY_DATA + device.getClientId());
             }
-
         }
         return success();
     }
