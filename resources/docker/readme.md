@@ -71,6 +71,7 @@ COMMIT;
 ```shell script
 docker stop $(docker ps -aq)
 docker rm $(docker ps -aq)
+docker rmi $(docker images -aq) -f
 docker volume prune
 docker network prune
 
