@@ -42,11 +42,7 @@ public class EmqxInternalConfig {
     @Resource
     MqttBizMessageHandler mqttBizMessageHandler;
 
-    /**
-     * 加载emqx
-     */
-    @Bean("IMqttAsyncClient-EZLINKER-CLIENT")
-    public PahoMqttPool pahoMqttPool() throws Exception {
+    private void init() {
         // 清除缓存,恢复现场
         redisUtil.del("DEVICE_ONLINE_COUNT");
         Set<Object> keys1 = redisUtil.sGet("EMQX_NODE_NAME*");
@@ -62,6 +58,14 @@ public class EmqxInternalConfig {
         for (String key : keys3) {
             redisUtil.del(key);
         }
+    }
+
+    /**
+     * 加载emqx
+     */
+    @Bean("IMqttAsyncClient-EZLINKER-CLIENT")
+    public PahoMqttPool pahoMqttPool() throws Exception {
+        init();
         //连接
         List<IMqttAsyncClient> iMqttAsyncClients = new ArrayList<>();
         logger.info("尝试连接EMQX...");
@@ -70,6 +74,7 @@ public class EmqxInternalConfig {
         if (emqxConfigs.isEmpty()) {
             throw new Exception("EMQX节点至少一个");
         }
+        //目前这里是写死的：EZ_CLIENT-{i}
         int c = 0;
         for (EmqxConfig emqxConfig : emqxConfigs) {
             cacheEmqxNodeState(emqxConfig);
@@ -90,6 +95,7 @@ public class EmqxInternalConfig {
                  */
                 @Override
                 public void connectComplete(boolean b, String s) {
+                    init();
                     log("Emqx:[" + s + "]连接成功", "Emqx:[" + s + "连接成功]", SystemLog.SystemLogType.NORMAL);
                     logger.info("Emqx:[" + s + "]连接成功");
                 }
@@ -98,7 +104,15 @@ public class EmqxInternalConfig {
                 public void connectionLost(Throwable throwable) {
                     throwable.printStackTrace();
                     log("Emqx:[" + iMqttAsyncClient.getServerURI() + "]连接失败",
-                            "Emqx:[" + iMqttAsyncClient.getServerURI() + "]连接失败", SystemLog.SystemLogType.NORMAL);
+                            "Emqx:[" + iMqttAsyncClient.getServerURI() + "]连接失败,尝试重连", SystemLog.SystemLogType.NORMAL);
+
+                    try {
+                        logger.error("尝试重连 emqx:[" + iMqttAsyncClient.getServerURI() + "]");
+                        Thread.sleep(3000);
+                        iMqttAsyncClient.reconnect();
+                    } catch (MqttException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -152,6 +166,13 @@ public class EmqxInternalConfig {
                                 @Override
                                 public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
                                     logger.error("连接 emqx:[" + iMqttAsyncClient.getServerURI() + "]失败,错误信息:" + throwable.getMessage());
+                                    try {
+                                        logger.error("尝试重连 emqx:[" + iMqttAsyncClient.getServerURI() + "]");
+                                        Thread.sleep(3000);
+                                        iMqttAsyncClient.reconnect();
+                                    } catch (MqttException | InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             });
 

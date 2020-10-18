@@ -13,26 +13,26 @@ public class RedisKeyPrefix {
     /**
      * 用户Token
      */
-    public static String EZLINKER_USER_TOKEN = "EZLINKER_USER_TOKEN";
+    public static String EZLINKER_USER_TOKEN = "EZLINKER_USER_TOKEN:";
     /**
      * 设备的参数
      */
-    public static String DEVICE_FIELD_PARAMS = "DEVICE_FIELD_PARAMS";
+    public static String DEVICE_FIELD_PARAMS = "DEVICE_FIELD_PARAMS:";
     /**
      * 节点状态
      */
-    public static String EMQX_NODE_STATE = "EMQX_NODE_STATE";
+    public static String EMQX_NODE_STATE = "EMQX_NODE_STATE:";
     /**
      * 设备当前运行状态
      */
-    public static String DEVICE_RUNNING_STATE = "DEVICE_RUNNING_STATE";
+    public static String DEVICE_RUNNING_STATE = "DEVICE_RUNNING_STATE:";
     /**
      * 设备在线数目
      */
-    public static String DEVICE_ONLINE_COUNT = "DEVICE_ONLINE_COUNT";
+    public static String DEVICE_ONLINE_COUNT = "DEVICE_ONLINE_COUNT:";
     /**
      * 设备在线状态
      */
-    public static String DEVICE_ON_OFF_LINE_STATE = "DEVICE_ON_OFF_LINE_STATE";
+    public static String DEVICE_ON_OFF_LINE_STATE = "DEVICE_ON_OFF_LINE_STATE:";
 
 }

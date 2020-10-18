@@ -122,16 +122,26 @@ public class DeviceController extends CurdController<Device> {
      * @throws XException
      */
     @Transactional(rollbackFor = Exception.class)
-    @DeleteMapping
+    @DeleteMapping("/{ids}")
     @Override
-    protected R delete(@RequestParam Integer[] ids) throws XException {
+    protected R delete(@PathVariable Integer[] ids) throws XException {
         for (Device device : iDeviceService.listByIds(Arrays.asList(ids))) {
             Map<Object, Object> runningMap = redisUtil.hmget(RedisKeyPrefix.DEVICE_RUNNING_STATE + device.getClientId());
             if (runningMap != null && (!runningMap.isEmpty())) {
                 throw new BizException("", "设备在运行状态,不可删除,建议先停止设备");
             } else {
                 // 删除所有Topic
-                iMqttTopicService.remove(new QueryWrapper<MqttTopic>().eq("device_id", device.getId()));
+                iMqttTopicService.remove(new QueryWrapper<MqttTopic>().eq("client_id", device.getClientId()));
+                // 删除设备
+                iDeviceService.remove(new QueryWrapper<Device>().eq("id", device.getId()));
+                // 删除Redis中的缓存
+                if (redisUtil.hasKey(RedisKeyPrefix.DEVICE_RUNNING_STATE + device.getClientId())) {
+                    redisUtil.del(RedisKeyPrefix.DEVICE_RUNNING_STATE + device.getClientId());
+
+                }
+                if (redisUtil.hasKey(RedisKeyPrefix.DEVICE_FIELD_PARAMS + device.getClientId())) {
+                    redisUtil.del(RedisKeyPrefix.DEVICE_FIELD_PARAMS + device.getClientId());
+                }
                 // 删除历史数据
                 mongoTemplate.dropCollection(MongoCollectionPrefix.DEVICE_HISTORY_DATA + device.getClientId());
             }
