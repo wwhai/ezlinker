@@ -88,8 +88,6 @@ public class EmqxInternalConfig {
 
                 /**
                  * 断线重连成功的接口
-                 * TODO 本应该有个尝试连接的方法的 看了下Paho-mqtt的源码，这里没有回调
-                 * TODO 已经在2020年9月24日提issue给Paho团队，如果没有解决准备自己实现一个.
                  * @param b
                  * @param s
                  */
@@ -98,6 +96,7 @@ public class EmqxInternalConfig {
                     init();
                     log("Emqx:[" + s + "]连接成功", "Emqx:[" + s + "连接成功]", SystemLog.SystemLogType.NORMAL);
                     logger.info("Emqx:[" + s + "]连接成功");
+                    cacheEmqxNodeState(emqxConfig);
                 }
 
                 @Override
