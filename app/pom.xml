@@ -222,24 +222,18 @@
             <version>2.0.1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.shell/spring-shell-starter -->
-        <dependency>
-            <groupId>org.springframework.shell</groupId>
-            <artifactId>spring-shell-starter</artifactId>
-            <version>2.0.1.RELEASE</version>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.shell/spring-shell-starter &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.shell</groupId>-->
+<!--            <artifactId>spring-shell-starter</artifactId>-->
+<!--            <version>2.0.1.RELEASE</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
     </dependencies>
-    <profiles>
-        <profile>
-            <id>dev-new</id>
-        </profile>
-    </profiles>
-
     <build>
         <plugins>
             <plugin>
@@ -260,7 +254,6 @@
 
             <!-- Docker maven plugin -->
             <plugin>
-
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>1.0.0</version>
@@ -281,10 +274,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <imageName>ezlinker/${project.version}</imageName>
+                    <imageName>ezlinker/ezlinker:latest</imageName>
                     <dockerDirectory>${project.basedir}/docker</dockerDirectory>
                     <imageTags>
-                        <imageTag>${project.version}</imageTag>
+                        <imageTag>latest</imageTag>
                     </imageTags>
                     <resources>
                         <resource>

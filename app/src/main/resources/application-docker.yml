@@ -3,15 +3,16 @@ server:
   servlet:
     context-path: /ezlinker
   port: 2500
+
 # Spring config
 spring:
-  devtools:
-    add-properties: false
+  profiles:
+    active: docker
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://106.75.57.171:53306/ezlinker?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8&tinyInt1isBit=NO
+      url: jdbc:mysql://ezlinker.mysql.io:3306/ezlinker?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8&tinyInt1isBit=NO
       username: root
       password: root
       initial-size: 10
@@ -34,20 +35,18 @@ spring:
         wall:
           config:
             multi-statement-allow: true
-
-
   # Redis
   redis:
     database: 0
-    host: 106.75.57.171
-    port: 56379
+    host: ezlinker.redis.io
+    port: 6379
     timeout: 300
-    password: ezlinker_redis
+    password: root
 
   # MongoDB
   data:
     mongodb:
-      uri: mongodb://root:root@106.75.57.171:57017/?authSource=admin
+      uri: mongodb://root:root@ezlinker.mongo.io:27017/?authSource=admin
       database: ezlinker
   mvc:
     throw-exception-if-no-handler-found: true
@@ -60,39 +59,38 @@ spring:
 
   # Quartz
   quartz:
-    #相关属性配置
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
     properties:
       org:
         quartz:
           scheduler:
-            instanceName: quartzScheduler
             instanceId: AUTO
-          jobStore:
-            class: org.quartz.impl.jdbcjobstore.JobStoreTX
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-            tablePrefix: QRTZ_
-            isClustered: false
-            clusterCheckinInterval: 10000
-            useProperties: false
-          threadPool:
-            class: org.quartz.simpl.SimpleThreadPool
-            threadCount: 10
-            threadPriority: 5
-            threadsInheritContextClassLoaderOfInitializingThread: true
-    job-store-type: JDBC
-    jdbc:
-      initialize-schema: NEVER
+            instanceName: clusteredScheduler
+            jobStore:
+              acquireTriggersWithinLock: true
+              class: org.quartz.impl.jdbcjobstore.JobStoreTX
+              driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+              useProperties: true
+              tablePrefix: qrtz_
+              misfireThreshold: 60000
+              clusterCheckinInterval: 5000
+              isClustered: false
+            threadPool:
+              class: org.quartz.simpl.SimpleThreadPool
+              threadCount: 10
+              threadPriority: 5
+              threadsInheritContextClassLoaderOfInitializingThread: true
+    startup-delay: 30
+    overwrite-existing-jobs: true
 
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 #  debug log
 logging:
   level:
     root: info
-    org.springframework.data.mongodb.core: DEBUG
-    com.baomidou.mybatisplus.core.mapper: DEBUG
-    web: info
+
 aliyun:
   mail:
     access-key: ULw8nLnKBktSbOhI

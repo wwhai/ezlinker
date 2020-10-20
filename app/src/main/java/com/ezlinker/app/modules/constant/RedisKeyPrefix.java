@@ -9,7 +9,7 @@ public class RedisKeyPrefix {
     /**
      * EMQX节点名称
      */
-    public static String EMQX_NODE_NAME = "EMQX_NODE_NAME";
+    public static String EMQX_NODE = "EMQX_NODE";
     /**
      * 用户Token
      */

@@ -45,7 +45,7 @@ public class EmqxInternalConfig {
     private void init() {
         // 清除缓存,恢复现场
         redisUtil.del("DEVICE_ONLINE_COUNT");
-        Set<Object> keys1 = redisUtil.sGet("EMQX_NODE_NAME*");
+        Set<Object> keys1 = redisUtil.sGet("EMQX_NODE*");
         Set<String> keys2 = redisUtil.keys("EMQX_NODE_STATE:*");
         Set<String> keys3 = redisUtil.keys("DEVICE_ON_OFF_LINE_STATE:*");
         for (Object key : keys1) {
@@ -203,7 +203,7 @@ public class EmqxInternalConfig {
      */
     private void cacheEmqxNodeState(EmqxConfig emqxConfig) {
 
-        redisUtil.sSet(RedisKeyPrefix.EMQX_NODE_NAME, emqxConfig.getNodeName());
+        redisUtil.sSet(RedisKeyPrefix.EMQX_NODE, emqxConfig.getNodeName());
         redisUtil.hset(RedisKeyPrefix.EMQX_NODE_STATE + emqxConfig.getNodeName(), "ip", emqxConfig.getIp());
         redisUtil.hset(RedisKeyPrefix.EMQX_NODE_STATE + emqxConfig.getNodeName(), "nodeName", emqxConfig.getNodeName());
         redisUtil.hset(RedisKeyPrefix.EMQX_NODE_STATE + emqxConfig.getNodeName(), "mqttPort", emqxConfig.getMqttPort().toString());

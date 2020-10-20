@@ -39,7 +39,7 @@ class RedisTest {
     @Test
     void testHget() {
         // EMQ集群部署最多允许7个节点
-        Set<Object> set = redisUtil.sGet(RedisKeyPrefix.EMQX_NODE_NAME);
+        Set<Object> set = redisUtil.sGet(RedisKeyPrefix.EMQX_NODE);
         for (Object o : set) {
             Object hget = redisUtil.hmget(RedisKeyPrefix.EMQX_NODE_STATE + o.toString());
             System.out.println("==>" + hget.toString());

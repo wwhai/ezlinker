@@ -117,9 +117,6 @@ public class CodeGenerator {
         strategy.setSkipView(false);
         //支持Lombok
         strategy.setEntityLombokModel(true);
-        //支持链式属性
-        strategy.setEntityBuilderModel(true);
-
         strategy.setSuperControllerClass("com.ezlinker.app.common.web.CurdController");
         strategy.setInclude(scanner("请输入表名"));
         strategy.setControllerMappingHyphenStyle(false);

@@ -52,17 +52,24 @@ public class EmqxMonitorController extends CurdController<EmqxConfig> {
     @Override
     protected R all() {
         List<Map<Object, Object>> emqxList = new ArrayList<>();
-        Set<Object> emqxNodeSet = redisUtil.sGet(RedisKeyPrefix.EMQX_NODE_NAME);
+        Set<Object> emqxNodeSet = redisUtil.sGet(RedisKeyPrefix.EMQX_NODE);
         for (Object o : emqxNodeSet) {
+            // TODO 缓存清理不够
             Map<Object, Object> cache = redisUtil.hmget(RedisKeyPrefix.EMQX_NODE_STATE + o.toString());
             try {
-                JSONObject result = EMQMonitorV4.getBrokersInfo(cache.get("ip").toString(),
-                        Integer.parseInt(cache.get("apiPort").toString()),
-                        cache.get("nodeName").toString(),
-                        cache.get("appId").toString(),
-                        cache.get("secret").toString());
-                cache.put("detail", result);
-                emqxList.add(cache);
+                Object ip = cache.get("ip");
+                if (ip != null) {
+                    JSONObject result = EMQMonitorV4.getBrokersInfo(ip.toString(),
+                            Integer.parseInt(cache.get("apiPort").toString()),
+                            cache.get("nodeName").toString(),
+                            cache.get("appId").toString(),
+                            cache.get("secret").toString());
+                    cache.put("detail", result);
+                    emqxList.add(cache);
+                } else {
+                    cache.put("detail", null);
+                }
+
             } catch (BizException e) {
                 cache.put("detail", null);
             }

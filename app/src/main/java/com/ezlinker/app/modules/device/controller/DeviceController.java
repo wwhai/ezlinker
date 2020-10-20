@@ -325,7 +325,7 @@ public class DeviceController extends CurdController<Device> {
     @RequestMapping("/forceOffline")
     public R forceOffline(@RequestParam String clientId) throws BizException, BadRequestException {
 
-        Set<Object> nodes = redisUtil.sGet(RedisKeyPrefix.EMQX_NODE_NAME);
+        Set<Object> nodes = redisUtil.sGet(RedisKeyPrefix.EMQX_NODE);
         if (nodes.isEmpty()) {
             throw new BizException("EMQX节点离线", "EMQX节点离线");
 
